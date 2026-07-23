@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import { classifications, getObject, mksObjects } from "./mks";
 
 const laws = [
   ["01", "Orientation precedes navigation."],
@@ -44,6 +45,7 @@ function Mark() {
 function Header() {
   const [open, setOpen] = useState(false);
   const links = [
+    ["#/mks", "MKS Library"],
     ["#specification", "Specification"],
     ["#frameworks", "Frameworks"],
     ["#metrics", "Metrics"],
@@ -130,11 +132,11 @@ function Origin() {
 function Specification() {
   const [active, setActive] = useState("D");
   const groups = {
-    D: { title: "Doctrine", desc: "Durable principles that establish how Meridian Arc understands systems, time, trust, and purposeful action.", count: "12 laws", examples: ["D-001 · The First Domino", "D-002 · Kinetic Purpose", "D-003 · Catalytic Action"] },
-    F: { title: "Frameworks", desc: "Structured ways to see a situation clearly, expose its relationships, and prepare intelligent action.", count: "10 registered", examples: ["F-001 · Orientation", "F-003 · Thought Pathways", "F-005 · Catalyst Model"] },
-    M: { title: "Methods", desc: "Repeatable operating sequences that turn understanding into accountable movement and learning.", count: "1 active", examples: ["M-001 · Meridian Operating Cycle", "Observe · Orient · Discover", "Catalyze · Reflect · Compound"] },
-    I: { title: "Instruments", desc: "Practical tools for measuring, diagnosing, and navigating real systems without mistaking the map for reality.", count: "5 seeded", examples: ["I-001 · Meridian Compass", "I-002 · Meridian Sextant", "I-003 · Meridian Horizon"] },
-    P: { title: "Patterns", desc: "Recurring conditions people recognize in life and work, mapped to the methods that can change them.", count: "10 seeded", examples: ["Analysis Paralysis", "Founder Dependency", "Cognitive Debt"] }
+    D: { title: "Doctrine", classification: "Doctrine", desc: "Durable principles that establish how Meridian Arc understands systems, time, trust, and purposeful action.", count: "12 laws", examples: ["D-001 · The First Domino", "D-002 · Kinetic Purpose", "D-003 · Catalytic Action"] },
+    F: { title: "Frameworks", classification: "Framework", desc: "Structured ways to see a situation clearly, expose its relationships, and prepare intelligent action.", count: "10 registered", examples: ["F-001 · Orientation", "F-003 · Thought Pathways", "F-005 · Catalyst Model"] },
+    M: { title: "Methods", classification: "Method", desc: "Repeatable operating sequences that turn understanding into accountable movement and learning.", count: "1 active", examples: ["M-001 · Meridian Operating Cycle", "Observe · Orient · Discover", "Catalyze · Reflect · Compound"] },
+    I: { title: "Instruments", classification: "Instrument", desc: "Practical tools for measuring, diagnosing, and navigating real systems without mistaking the map for reality.", count: "5 seeded", examples: ["I-001 · Meridian Compass", "I-002 · Meridian Sextant", "I-003 · Meridian Horizon"] },
+    P: { title: "Patterns", classification: "Pattern", desc: "Recurring conditions people recognize in life and work, mapped to the methods that can change them.", count: "10 seeded", examples: ["Analysis Paralysis", "Founder Dependency", "Cognitive Debt"] }
   };
   const item = groups[active];
 
@@ -158,7 +160,7 @@ function Specification() {
           <h3>{item.title}</h3>
           <p>{item.desc}</p>
           <ul>{item.examples.map((example) => <li key={example}><span>↗</span>{example}</li>)}</ul>
-          <button className="quiet-button">Collection preview · v0.5</button>
+          <a className="quiet-button" href={`#/mks?class=${encodeURIComponent(item.classification)}`}>Open collection · v0.5</a>
         </div>
       </div>
     </section>
@@ -196,12 +198,12 @@ function Frameworks() {
       </div>
       <div className="framework-grid">
         {frameworks.map((framework, index) => (
-          <article key={framework.id}>
+          <article key={framework.id} className="linked-card" onClick={() => { window.location.hash = `/mks/${framework.id}`; }}>
             <div className="card-top"><span>{framework.id}</span><span>{framework.status}</span></div>
             <div className={`glyph glyph-${index + 1}`}><i /><i /><i /></div>
             <h3>{framework.name}</h3>
             <p>{framework.text}</p>
-            <span className="card-link">View specification <b>↗</b></span>
+            <a className="card-link" href={`#/mks/${framework.id}`}>View specification <b>↗</b></a>
           </article>
         ))}
       </div>
@@ -304,7 +306,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
+        <a href="#/mks">MKS Library</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -315,6 +317,109 @@ function Footer() {
   );
 }
 
+function Status({ children }) {
+  return <span className={`object-status status-${children.toLowerCase()}`}>{children}</span>;
+}
+
+function Library() {
+  const hash = typeof window === "undefined" ? "" : window.location.hash;
+  const params = new URLSearchParams((hash.split("?")[1] || ""));
+  const [query, setQuery] = useState("");
+  const [classification, setClassification] = useState(params.get("class") || "All");
+  const [status, setStatus] = useState("All");
+  const results = useMemo(() => mksObjects.filter((item) => {
+    const text = `${item.id} ${item.title} ${item.classification} ${item.status} ${item.statement} ${item.applications.join(" ")}`.toLowerCase();
+    return (classification === "All" || item.classification === classification)
+      && (status === "All" || item.status === status)
+      && text.includes(query.toLowerCase());
+  }), [query, classification, status]);
+
+  return (
+    <main className="library-page">
+      <section className="library-hero">
+        <div>
+          <p className="eyebrow"><span /> MKS · FOUNDATION v0.5</p>
+          <h1>Knowledge with<br /><em>a permanent home.</em></h1>
+        </div>
+        <p>Search the doctrine, laws, frameworks, methods, instruments, patterns, and measurements that form Meridian Arc’s source of truth.</p>
+      </section>
+      <section className="library-workspace">
+        <aside className="library-sidebar">
+          <p className="filter-title">Classification</p>
+          {classifications.map((value) => <button className={classification === value ? "active" : ""} key={value} onClick={() => setClassification(value)}><span>{value}</span><b>{value === "All" ? mksObjects.length : mksObjects.filter((x) => x.classification === value).length}</b></button>)}
+          <p className="filter-title">Status</p>
+          {["All", "Locked", "Foundation", "Developing", "Seed"].map((value) => <button className={status === value ? "active" : ""} key={value} onClick={() => setStatus(value)}><span>{value}</span></button>)}
+        </aside>
+        <div className="library-results">
+          <label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search by ID, term, classification, or problem…" /></label>
+          <div className="result-meta"><span>{results.length} knowledge objects</span><span>Versioned · Reviewable · Linked</span></div>
+          <div className="object-grid">
+            {results.map((item) => (
+              <a className="object-card" href={`#/mks/${item.id}`} key={item.id}>
+                <div><span className="object-id">{item.id}</span><Status>{item.status}</Status></div>
+                <p className="object-class">{item.classification}</p>
+                <h2>{item.title}</h2>
+                <p>{item.statement}</p>
+                <span className="open-object">Open specification <b>↗</b></span>
+              </a>
+            ))}
+          </div>
+          {!results.length && <div className="empty-result"><h2>No object found.</h2><p>Try a broader term or remove a filter.</p></div>}
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function ObjectPage({ item }) {
+  if (!item) return <main className="object-page"><section className="empty-result"><h1>Knowledge object not found.</h1><a href="#/mks">Return to the MKS Library</a></section></main>;
+  const sections = [
+    ["Purpose", item.purpose],
+    ["Rationale", item.rationale],
+    ["Conditions of validity", item.validity]
+  ];
+  return (
+    <main className="object-page">
+      <div className="object-breadcrumb"><a href="#/mks">MKS Library</a><span>→</span><span>{item.id}</span></div>
+      <section className="object-masthead">
+        <div className="object-meta"><span>{item.classification}</span><Status>{item.status}</Status><span>Version {item.version}</span></div>
+        <p className="object-id large">{item.id}</p>
+        <h1>{item.title}</h1>
+        <blockquote>{item.statement}</blockquote>
+      </section>
+      <section className="object-body">
+        <div className="object-narrative">
+          {sections.map(([title, copy]) => <article key={title}><p className="kicker">{title}</p><p>{copy}</p></article>)}
+          <article><p className="kicker">Applications</p><ul>{item.applications.map((value) => <li key={value}>{value}</li>)}</ul></article>
+          <div className="evidence-grid">
+            <article><p className="kicker">Example</p>{item.examples.map((value) => <p key={value}>{value}</p>)}</article>
+            <article><p className="kicker">Counterexample</p>{item.counterexamples.map((value) => <p key={value}>{value}</p>)}</article>
+          </div>
+        </div>
+        <aside className="object-relations">
+          <p className="filter-title">Relationships</p>
+          {item.relationships.map((id) => {
+            const related = getObject(id);
+            return related ? <a href={`#/mks/${id}`} key={id}><span>{id}</span><b>{related.title}</b></a> : null;
+          })}
+          <div className="revision"><span>STATUS</span><b>{item.status}</b><span>RELEASE</span><b>MKS v{item.version}</b></div>
+        </aside>
+      </section>
+      <section className="next-object"><a href="#/mks">← Return to all knowledge objects</a></section>
+    </main>
+  );
+}
+
 export default function App() {
+  const [route, setRoute] = useState(typeof window === "undefined" ? "#/" : (window.location.hash || "#/"));
+  useEffect(() => {
+    const update = () => { setRoute(window.location.hash || "#/"); window.scrollTo(0, 0); };
+    window.addEventListener("hashchange", update);
+    return () => window.removeEventListener("hashchange", update);
+  }, []);
+  const path = route.slice(1).split("?")[0];
+  const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
+  if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
+  if (path === "/mks") return <><Header /><Library /><Footer /></>;
   return <><Header /><main><Hero /><Origin /><Specification /><Reaction /><Frameworks /><Metrics /><Laws /><Homes /><Begin /></main><Footer /></>;
 }
