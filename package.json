@@ -4,7 +4,7 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "vinext dev",
+    "dev": "vite",
     "build": "vinext build && node scripts/package-sites.mjs",
     "build:pages": "vite build --config vite.pages.config.js && node scripts/package-pages.mjs",
     "start": "vinext start",
