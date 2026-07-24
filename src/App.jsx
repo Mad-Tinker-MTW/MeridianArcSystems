@@ -47,6 +47,7 @@ function Header() {
   const links = [
     ["#/mks", "MKS Library"],
     ["#/laws", "Laws"],
+    ["#/patterns", "Patterns"],
     ["#/roadmap", "Roadmap"],
     ["#specification", "Specification"],
     ["#frameworks", "Frameworks"],
@@ -308,7 +309,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
+        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -404,6 +405,16 @@ function ObjectPage({ item }) {
             <article><p className="kicker">Example</p>{item.examples.map((value) => <p key={value}>{value}</p>)}</article>
             <article><p className="kicker">Counterexample</p>{item.counterexamples.map((value) => <p key={value}>{value}</p>)}</article>
           </div>
+          {item.symptoms && <section className="pattern-diagnosis">
+            <div className="protocol-heading"><p className="kicker">Pattern diagnosis</p><h2>See the system<br />behind the symptom.</h2></div>
+            <div className="diagnosis-grid">
+              <article><p className="kicker">Observable symptoms</p><ul>{item.symptoms.map((value) => <li key={value}>{value}</li>)}</ul></article>
+              <article><p className="kicker">System causes</p><ul>{item.causes.map((value) => <li key={value}>{value}</li>)}</ul></article>
+            </div>
+            <article className="false-fix"><p className="kicker">Common false fix</p><p>{item.falseFix}</p></article>
+            <article className="first-catalyst"><p className="kicker">First catalyst</p><p>{item.catalyst}</p></article>
+            <article className="success-signals"><p className="kicker">Success signals</p>{item.successSignals.map((value) => <span key={value}>{value}</span>)}</article>
+          </section>}
           {hasProtocol && <section className="protocol">
             <div className="protocol-heading"><p className="kicker">Operating protocol</p><h2>From principle<br />to practice.</h2></div>
             <div className="io-grid">
@@ -483,6 +494,30 @@ function LawsPage() {
   </main>;
 }
 
+function PatternsPage() {
+  const patternObjects = mksObjects.filter((item) => item.classification === "Pattern");
+  return <main className="patterns-page">
+    <section className="patterns-hero">
+      <p className="eyebrow"><span /> RECOGNIZE BEFORE PRESCRIBING</p>
+      <h1>Problems people<br /><em>already know by feel.</em></h1>
+      <p>People rarely arrive asking for a framework. They arrive overwhelmed, dependent, exhausted, stalled, or unable to trust the system around them. Patterns are the human entrance to Meridian Arc.</p>
+    </section>
+    <section className="pattern-index">
+      {patternObjects.map((pattern, index) => <a href={`#/mks/${pattern.id}`} key={pattern.id}>
+        <span className="pattern-number">{String(index + 1).padStart(2, "0")}</span>
+        <div><p className="kicker">{pattern.id} · {pattern.status}</p><h2>{pattern.title}</h2><p>{pattern.statement}</p></div>
+        <div className="pattern-catalyst"><span>FIRST CATALYST</span><p>{pattern.catalyst}</p></div>
+        <b>↗</b>
+      </a>)}
+    </section>
+    <section className="pattern-principle section">
+      <p className="kicker">A boundary worth keeping</p>
+      <h2>Name the pattern.<br />Never reduce the person to it.</h2>
+      <p>Meridian patterns describe recurring conditions produced by systems. They are hypotheses to examine, not labels to attach to human beings.</p>
+    </section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState(typeof window === "undefined" ? "#/" : (window.location.hash || "#/"));
   useEffect(() => {
@@ -496,6 +531,7 @@ export default function App() {
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
+  if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
   if (path === "/roadmap") return <><Header /><RoadmapPage /><Footer /></>;
   return <><Header /><main><Hero /><Origin /><Specification /><Reaction /><Frameworks /><Metrics /><Laws /><Homes /><Begin /></main><Footer /></>;
 }
