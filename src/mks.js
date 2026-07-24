@@ -287,17 +287,48 @@ const operationalSpecs = {
   }
 };
 
+const lawDetails = [
+  ["L-001", "Prevent movement based on a false understanding of position.", "Direction is meaningful only in relation to a known starting point, reference, and purpose.", "The required depth of orientation increases with novelty, uncertainty, irreversibility, and consequence.", "A team verifies the actual failure state before choosing a repair.", "Repeating a familiar emergency response when the environment has materially changed.", ["Incident response", "Strategy", "Personal decisions"], ["F-001", "M-001"], ["What position are we actually in?", "Which reference establishes that position?", "What uncertainty could change the route?"]],
+  ["L-002", "Reveal the structure producing a repeated result.", "When an outcome recurs, attention should move from the latest event to the conditions that reliably recreate it.", "A single event may be accidental; repetition and shared causes must be established before inferring a system.", "Repeated late approvals are traced to unclear ownership and a serial handoff.", "Blaming the last person in the chain while preserving the conditions that guarantee another delay.", ["Operations", "Quality", "Organizational diagnosis"], ["P-004", "F-010"], ["What recurs?", "Which conditions remain present each time?", "What change would alter the recurrence?"]],
+  ["L-003", "Make understanding reusable so each cycle starts from a stronger position.", "Clear definitions, decisions, and records reduce repeated interpretation and allow learning to accumulate.", "Clarity must remain connected to reality; oversimplification can compound error just as easily.", "A documented decision record prevents the same unresolved debate from consuming the next meeting.", "Producing polished documentation that hides uncertainty or is never used.", ["Documentation", "Teaching", "Decision systems"], ["F-003", "P-010"], ["Can another person use this without reinterpretation?", "What ambiguity was removed?", "What future work becomes easier?"]],
+  ["L-004", "Ensure useful knowledge, capability, and responsibility move beyond their source.", "Creation becomes durable only when value can reach a second steward, learner, or system.", "Some responsibilities must remain with their accountable owner; transfer does not mean abandonment.", "A technician records and teaches a diagnostic method another technician can improve.", "A founder completes every critical task personally and calls the dependence quality control.", ["Knowledge transfer", "Leadership", "Automation"], ["D-002", "P-002"], ["What receives the energy next?", "What can the recipient now do?", "Where does transfer stop?"]],
+  ["L-005", "Use independence from the creator as evidence of successful system design.", "A durable system preserves purpose and capability without requiring continuous rescue from its originator.", "Independent does not mean ungoverned; high-risk systems still require accountable oversight and maintenance.", "A service continues reliably during the founder’s absence because authority and knowledge have transferred.", "Removing expert oversight from a hazardous process merely to claim autonomy.", ["Succession", "Product design", "Team capability"], ["P-002", "F-006"], ["Can the system continue without its creator present?", "What oversight remains legitimately necessary?", "Is dependency intentional or accidental?"]],
+  ["L-006", "Create conditions for beneficial emergence without pretending to control every outcome.", "Novel patterns arise through interaction with reality; plans can shape conditions but cannot contain all future responses.", "Where safety, law, or irreversible harm demands control, emergence must remain bounded by explicit constraints.", "A prototype is released to a bounded group to reveal uses the designers could not predict.", "Calling preventable chaos ‘emergence’ after omitting basic safeguards.", ["Innovation", "Research", "Community design"], ["D-001", "D-003"], ["Which conditions are designed?", "What remains open to discovery?", "What boundaries protect against unacceptable harm?"]],
+  ["L-007", "Evaluate purpose through sustained consequence rather than ceremonial completion.", "An initiating act fulfills its purpose only when the intended value transfers and continues.", "Some actions are legitimately complete in one event; continuity must be part of the stated purpose before applying this test.", "Training succeeds when learners can perform and teach the capability afterward.", "Counting attendance as success when no capability changes.", ["Education", "Change programs", "Automation"], ["D-002", "M-001"], ["What continuation was intended?", "Did the next actor move?", "How long must the reaction persist to count?"]],
+  ["L-008", "Preserve human energy for stewardship by investing only the force initiation truly requires.", "Excess effort before evidence creates waste; insufficient effort creates a false test that cannot reach transfer.", "Minimum necessary effort is constrained by credibility, safety, quality, and the energy required to reach the second action.", "A team builds the smallest reliable integration that can complete a real handoff.", "Shipping a fragile demonstration and interpreting its failure as proof that the idea is wrong.", ["Experiment design", "Prioritization", "Automation"], ["D-003", "F-005"], ["What is the first required transfer?", "What is the least credible energy needed to reach it?", "Which effort can wait for evidence?"]],
+  ["L-009", "Locate value in movement that creates capability beyond the original act.", "Stored expertise and completed work become socially useful when they reach another context, person, or process.", "Not every transfer creates value; distortion, coercion, or transferred burden can destroy it.", "A reusable template lets many teams perform work that previously required a specialist.", "Automating a task by shifting hidden correction work onto customers.", ["Product design", "Knowledge systems", "Service operations"], ["D-002", "G-001"], ["What moved?", "Who gained capability?", "Was cost or burden merely displaced?"]],
+  ["L-010", "Protect finite human attention for work requiring human purpose, judgment, creativity, compassion, and stewardship.", "Repeated mechanical demands consume the same life resource needed for meaning and accountable choice.", "Automation must not remove human judgment where dignity, ambiguity, consent, safety, or accountability requires it.", "Routine reconciliation is automated while a person reviews exceptions and consequences.", "Using automation to deny a person meaningful explanation or appeal.", ["Responsible automation", "Work design", "Service delivery"], ["G-002", "P-003"], ["What uniquely human capacity should be protected?", "Which judgment must remain accountable?", "Whose time is actually being conserved?"]],
+  ["L-011", "Make observation and learning part of responsible system stewardship.", "Plans are hypotheses; reactions provide evidence that must change how the system is understood and guided.", "Observation is not passivity. Immediate intervention remains necessary when defined safety or integrity boundaries are crossed.", "A rollout includes explicit feedback signals and changes course when harm appears.", "Watching a failing process continue in the name of learning after stop conditions are met.", ["Governance", "Iteration", "Program leadership"], ["M-001", "F-007"], ["What did the reaction reveal?", "What boundary requires action?", "What should change in the next cycle?"]],
+  ["L-012", "Measure progress by durable capability created rather than time or activity consumed.", "Hours, prompts, meetings, and volume describe motion; completed reusable capability describes contribution.", "Capability measures must remain paired with quality, truth, safety, and human impact; they must never become measures of human worth.", "A completed, reviewable framework is recorded with the capability it enables and the time invested.", "Inflating output counts with low-quality artifacts that create review debt.", ["AI work accounting", "Portfolio review", "Learning systems"], ["G-001", "G-002"], ["What completed capability now exists?", "Can the contribution be reviewed and reused?", "What quality or downstream cost qualifies the measure?"]]
+];
+
+const lawSpecs = Object.fromEntries(lawDetails.map(([id, purpose, rationale, validity, example, counterexample, applications, relationships, checks]) => [id, {
+  purpose, rationale, validity, applications, relationships,
+  examples: [example],
+  counterexamples: [counterexample],
+  inputs: ["A real decision, process, or recurring condition", "Observable evidence", "An accountable steward"],
+  outputs: ["A written law test", "A decision with stated boundaries", "Evidence for the next review"],
+  steps: [
+    ["State the situation", "Describe the actual condition without using the law as the conclusion."],
+    ["Test the claim", checks[0]],
+    ["Examine the boundary", checks[1]],
+    ["Decide and record", checks[2]]
+  ],
+  checks,
+  genEvidence: "A law test counts as completed GEN only when the situation, evidence, boundary, decision, and reviewable outcome are recorded."
+}]));
+
 export const mksObjects = rawObjects.map((item) => ({
   ...item,
-  maturity: operationalSpecs[item.id] ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
-  ...(operationalSpecs[item.id] || {})
+  maturity: (operationalSpecs[item.id] || lawSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
+  ...(operationalSpecs[item.id] || lawSpecs[item.id] || {})
 }));
 
 export const roadmap = [
   { phase: "Built", count: 43, label: "Knowledge objects have permanent, searchable homes.", status: "Complete" },
-  { phase: "Operational", count: 9, label: "Priority entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
-  { phase: "Next", count: 12, label: "Meridian Laws need individual validity conditions, examples, and tests.", status: "Queued" },
-  { phase: "Then", count: 10, label: "Pattern seeds need symptoms, causes, catalysts, and intervention maps.", status: "Queued" }
+  { phase: "Operational", count: 21, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
+  { phase: "Next", count: 10, label: "Pattern seeds need symptoms, causes, catalysts, and intervention maps.", status: "Queued" },
+  { phase: "Then", count: 5, label: "Instrument seeds need worksheets, scales, and worked examples.", status: "Queued" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
