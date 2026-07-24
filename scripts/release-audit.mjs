@@ -20,8 +20,8 @@ pass("unique application IDs", unique(applications, "id"));
 pass("10 Academy paths", academyPaths.length === 10, String(academyPaths.length));
 pass("complete Academy paths", academyPaths.every((item) => item.lessons.length === 4 && item.mastery.length >= 4 && item.assessment.length >= 3));
 pass("single active roadmap phase", roadmap.filter((item) => item.status === "Active").length === 1);
-pass("RC1 route and manifest", app.includes('path === "/release-candidate"') && app.includes("MKS-v0.6-rc.1-manifest.json"));
-pass("three governed releases", app.includes('id: "REL-003"'));
+pass("v0.6 route and manifest", app.includes('path === "/release-candidate"') && app.includes("MKS-v0.6-release-manifest.json"));
+pass("four governed releases", app.includes('id: "REL-003"') && app.includes('id: "REL-004"'));
 pass("ten RC acceptance gates", (app.match(/\["RC-\d\d"/g) || []).length === 10);
 pass("responsive RC layout", css.includes(".rc-page") && css.includes(".rc-acceptance"));
 pass("known limitations preserved", app.includes("knownLimitations"));
@@ -30,5 +30,5 @@ if (failures.length) {
   console.error(`\nRelease audit failed: ${failures.join(", ")}`);
   process.exitCode = 1;
 } else {
-  console.log("\nMKS v0.6 RC1 release audit passed.");
+  console.log("\nMKS v0.6 Foundation release audit passed.");
 }
