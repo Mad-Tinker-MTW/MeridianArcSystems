@@ -50,8 +50,8 @@ p { line-height: 1.65; }
 .mini-mark i:nth-child(2) { transform: rotate(0); height: 19px; }
 .mini-mark i:nth-child(3) { transform: rotate(48deg); height: 12px; }
 
-nav { display: flex; align-items: center; gap: 30px; }
-nav a { color: #b9c1c2; font-size: 12px; letter-spacing: .08em; transition: color .25s; }
+nav { display: flex; align-items: center; gap: clamp(12px, 1.4vw, 24px); }
+nav a { color: #b9c1c2; font-size: 11px; letter-spacing: .08em; transition: color .25s; }
 nav a:hover { color: var(--gold-light); }
 .nav-cta { border: 1px solid rgba(200,167,106,.55); padding: 11px 16px; color: var(--gold-light); }
 .menu-button { display: none; }
@@ -251,7 +251,61 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
 .footer-links a { color: #859599; text-transform: uppercase; letter-spacing: .13em; font-size: 9px; }
 .footer-bottom { display: flex; justify-content: space-between; color: #53666b; font-size: 8px; text-transform: uppercase; letter-spacing: .13em; }
 
-.library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page { min-height: 100vh; background: var(--deep); padding-top: 84px; }
+.library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page { min-height: 100vh; background: var(--deep); padding-top: 84px; }
+
+.academy-hero { padding: 100px clamp(28px, 7vw, 118px) 86px; display: grid; grid-template-columns: 1.12fr .88fr; align-items: end; gap: 10%; background: radial-gradient(circle at 80% 35%, rgba(65,111,124,.19), transparent 30%), #07131f; border-bottom: 1px solid var(--line); }
+.academy-hero h1 { font-size: clamp(52px, 6.4vw, 92px); }
+.academy-hero > p { color: #91a2a5; max-width: 560px; font-size: 16px; }
+.academy-map { padding: 48px clamp(28px, 7vw, 118px) 110px; }
+.academy-levels { display: flex; flex-wrap: wrap; gap: 7px; }
+.academy-levels button { border: 1px solid var(--line); background: transparent; color: #7f9296; padding: 9px 11px; cursor: pointer; font-size: 9px; text-transform: uppercase; letter-spacing: .1em; }
+.academy-levels button b { margin-left: 10px; color: #536a70; }
+.academy-levels button.active { color: var(--gold-light); border-color: rgba(200,167,106,.5); background: rgba(200,167,106,.07); }
+.learning-path-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.learning-path-grid > a { background: #0b1a27; min-height: 440px; padding: 28px; display: flex; flex-direction: column; transition: .2s; }
+.learning-path-grid > a:hover { background: #102433; transform: translateY(-3px); }
+.learning-path-grid > a > div { display: flex; justify-content: space-between; color: #677c81; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; }
+.learning-path-grid > a > strong { color: #405b63; font: 500 52px "Playfair Display"; margin: 38px 0 8px; }
+.learning-path-grid h2 { color: var(--gold-light); font-size: 38px; }
+.learning-path-grid > a > p { color: #899a9d; max-width: 580px; }
+.learning-path-grid footer { margin-top: auto; display: flex; justify-content: space-between; padding: 16px 0 0; border-top: 1px solid var(--line); background: transparent; color: #9b8457; font-size: 8px; letter-spacing: .12em; text-transform: uppercase; }
+.academy-standard { text-align: center; background: #e8e4d8; color: #10202a; }
+.academy-standard h2 { max-width: 1050px; margin: 0 auto; }
+.path-masthead { padding: 95px clamp(28px, 8vw, 145px) 85px; display: grid; grid-template-columns: 1.1fr .9fr; align-items: end; gap: 10%; background: radial-gradient(circle at 78% 38%, rgba(62,112,124,.18), transparent 33%), #07131f; border-bottom: 1px solid var(--line); }
+.path-masthead h1 { font-size: clamp(58px, 7vw, 104px); color: var(--gold-light); }
+.path-masthead > div:last-child > p:last-child { color: #b8c4c3; font: 500 clamp(20px, 2vw, 29px) "Playfair Display"; line-height: 1.45; }
+.path-context { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+.path-context article { padding: 35px clamp(28px, 8vw, 145px); background: #0b1a27; }
+.path-context article p:not(.kicker) { color: #9cacad; }
+.lesson-sequence { padding: 90px clamp(28px, 8vw, 145px); }
+.lesson-sequence > article { min-height: 190px; display: grid; grid-template-columns: 70px 1fr 120px; gap: 30px; align-items: center; border-bottom: 1px solid var(--line); }
+.lesson-sequence > article > span { color: var(--gold); font: 500 27px "Playfair Display"; }
+.lesson-sequence > article h2 { font-size: 34px; }
+.lesson-sequence > article p:last-child { color: #899b9e; }
+.lesson-sequence > article > a { color: #9c8559; font-size: 8px; text-transform: uppercase; letter-spacing: .13em; text-align: right; }
+.path-exercise { padding: 85px clamp(28px, 8vw, 145px); background: #e8e4d8; color: #10202a; }
+.path-exercise h2 { max-width: 1150px; font-size: clamp(34px, 4.5vw, 64px); }
+.academy-progress { margin: 90px clamp(28px, 8vw, 145px); padding: 60px; border: 1px solid rgba(200,167,106,.36); background: linear-gradient(145deg, rgba(21,45,56,.8), rgba(7,17,28,.8)); }
+.academy-progress > div:first-child { display: grid; grid-template-columns: 1fr 1fr; align-items: end; gap: 8%; margin-bottom: 35px; }
+.academy-progress > div:first-child .kicker { grid-column: 1 / -1; }
+.academy-progress > div:first-child p:last-child { color: #7f9296; }
+.academy-progress > div:nth-child(2) { border: 1px solid var(--line); }
+.academy-progress label { display: block; border-bottom: 1px solid var(--line); cursor: pointer; }
+.academy-progress label:last-child { border: 0; }
+.academy-progress input { position: absolute; opacity: 0; pointer-events: none; }
+.academy-progress label > span { min-height: 70px; padding: 17px; display: flex; align-items: center; gap: 18px; color: #aab7b7; }
+.academy-progress label i { width: 35px; height: 35px; border: 1px solid var(--line); display: grid; place-items: center; color: var(--gold); font-style: normal; font-size: 9px; }
+.academy-progress input:checked + span { background: rgba(200,167,106,.08); color: var(--ivory); }
+.academy-progress input:focus-visible + span { outline: 1px solid var(--gold); outline-offset: -2px; }
+.academy-progress button { margin-top: 18px; border: 1px solid var(--line); background: transparent; color: #8fa0a3; padding: 11px 14px; font-size: 8px; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.path-assessment { margin: 0 clamp(28px, 8vw, 145px) 90px; display: grid; grid-template-columns: 1fr 310px; gap: 70px; }
+.path-assessment article { display: grid; grid-template-columns: 50px 1fr; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+.path-assessment article span { color: var(--gold); font-size: 9px; }
+.path-assessment article p { margin: 0; color: #a5b2b2; }
+.path-assessment aside { border-left: 1px solid var(--line); padding-left: 28px; }
+.path-assessment aside a { display: flex; flex-direction: column; gap: 5px; padding: 13px 0; border-bottom: 1px solid var(--line); }
+.path-assessment aside a span { color: #677c80; font-size: 8px; letter-spacing: .14em; }
+.path-assessment aside a b { color: #acb8b7; font: 500 19px "Playfair Display"; }
 
 .applications-hero { padding: 100px clamp(28px, 7vw, 118px) 86px; display: grid; grid-template-columns: 1.12fr .88fr; align-items: end; gap: 10%; background: radial-gradient(circle at 80% 35%, rgba(65,111,124,.19), transparent 30%), #07131f; border-bottom: 1px solid var(--line); }
 .applications-hero h1 { font-size: clamp(52px, 6.4vw, 92px); }
@@ -596,6 +650,9 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .application-grid { grid-template-columns: repeat(2, 1fr); }
   .application-evidence { grid-template-columns: 1fr; }
   .application-workbench { padding: 45px; }
+  .academy-hero, .path-masthead { grid-template-columns: 1fr; gap: 34px; }
+  .learning-path-grid { grid-template-columns: repeat(2, 1fr); }
+  .path-context, .assessment-layout { grid-template-columns: 1fr; }
 }
 
 @media (max-width: 620px) {
@@ -628,7 +685,7 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .begin::after { width: 570px; height: 570px; }
   .footer-links { gap: 17px; }
   .footer-bottom { flex-direction: column; gap: 8px; }
-  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page { padding-top: 72px; }
+  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page { padding-top: 72px; }
   .library-hero { padding: 70px 24px 55px; }
   .library-results { padding: 35px 24px 80px; }
   .result-meta span:last-child { display: none; }
@@ -685,6 +742,13 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .application-related { margin: 0 24px 65px; }
   .application-related > div { grid-template-columns: 1fr; }
   .application-related a { border-right: 0; border-bottom: 1px solid var(--line); }
+  .academy-hero, .path-masthead { padding: 75px 24px 60px; }
+  .academy-tools { padding: 35px 24px 22px; }
+  .learning-path-grid { margin: 0 24px 75px; grid-template-columns: 1fr; }
+  .learning-path-grid > a { min-height: 420px; }
+  .path-context, .lesson-sequence, .path-exercise, .mastery-audit, .path-assessment, .path-related { margin-left: 24px; margin-right: 24px; }
+  .lesson-card { grid-template-columns: 42px 1fr; gap: 14px; }
+  .mastery-item { grid-template-columns: 28px 1fr; gap: 14px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
