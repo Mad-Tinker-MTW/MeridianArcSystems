@@ -46,6 +46,7 @@ function Header() {
     ["#/studio", "Studio"],
     ["#/releases", "Releases"],
     ["#/platform", "Platform"],
+    ["#/validate", "Validate"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -308,7 +309,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/platform">Platform</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/platform">Platform</a><a href="#/validate">Validate</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -1359,6 +1360,92 @@ function PlatformPage() {
   </main>;
 }
 
+const validationMissions = [
+  { id: "VAL-001", title: "Find a useful idea", route: "#/mks", instruction: "Without guidance, find one knowledge object that applies to a problem you recognize.", evidence: "Name the object and explain why you chose it.", weight: 12 },
+  { id: "VAL-002", title: "Understand the First Domino", route: "#/mks/D-001", instruction: "Read D-001 and explain the difference between the initiating plan and the emerging pattern.", evidence: "Restate the distinction in your own words.", weight: 14 },
+  { id: "VAL-003", title: "Use an application", route: "#/applications", instruction: "Choose a worked application and identify its diagnosis, catalyst, and expected reaction.", evidence: "Record whether the sequence made the situation easier to act on.", weight: 12 },
+  { id: "VAL-004", title: "Complete a learning path", route: "#/academy/LP-001", instruction: "Follow Begin at 0,0 far enough to produce a present-position statement.", evidence: "Save the statement and identify any instruction that was unclear.", weight: 16 },
+  { id: "VAL-005", title: "Inspect a real release", route: "#/releases/REL-001", instruction: "Read the publication and trace it back to its source object and review evidence.", evidence: "Confirm whether you could distinguish source, translation, and release.", weight: 12 },
+  { id: "VAL-006", title: "Navigate the Evidence Graph", route: "#/platform", instruction: "Select one graph node and follow one inbound and one outbound relationship.", evidence: "Name both relationships and whether they made sense.", weight: 12 },
+  { id: "VAL-007", title: "Test phone readability", route: "#/", instruction: "Use the site on a phone or narrow window. Open the menu and visit three sections.", evidence: "Record clipping, tiny text, confusing controls, or horizontal scrolling.", weight: 12 },
+  { id: "VAL-008", title: "Explain Meridian without us", route: "#/", instruction: "After using the site, explain what Meridian Arc does without reading the homepage language back.", evidence: "Record the explanation exactly. This tests independent transfer.", weight: 10 }
+];
+
+const hardeningChecks = [
+  ["Production build", "Pass", "Static and server builds complete with packaged hosting artifacts."],
+  ["Responsive overflow", "Pass", "Core routes tested without horizontal overflow at desktop and mobile breakpoints."],
+  ["Keyboard semantics", "Pass", "Navigation, forms, tabs, buttons, and links use semantic interactive elements."],
+  ["Reduced motion", "Pass", "Animations and transitions yield to the reduced-motion preference."],
+  ["Server write authority", "Pass", "Mutation authority is checked at the API boundary, not trusted from the client."],
+  ["Durable data migration", "Pass", "D1 schema and indexed migration ship with the deployed artifact."],
+  ["External task completion", "Pending", "Requires at least two people who did not build the system."],
+  ["Accessibility audit", "Pending", "Requires formal automated and human assistive-technology review."],
+  ["Threat review", "Pending", "Requires adversarial review of write paths, rate limits, and public exposure."],
+  ["Backup restoration", "Pending", "Requires an exported data backup and demonstrated restoration procedure."]
+];
+
+function ValidationCenterPage() {
+  const blankResults = Object.fromEntries(validationMissions.map((mission) => [mission.id, { status: "Untested", notes: "" }]));
+  const [tester, setTester] = useState(() => {
+    if (typeof window === "undefined") return { name: "", relationship: "Independent tester", device: "" };
+    try { return JSON.parse(window.localStorage.getItem("meridian-validator")) || { name: "", relationship: "Independent tester", device: "" }; } catch { return { name: "", relationship: "Independent tester", device: "" }; }
+  });
+  const [results, setResults] = useState(() => {
+    if (typeof window === "undefined") return blankResults;
+    try { return { ...blankResults, ...(JSON.parse(window.localStorage.getItem("meridian-validation")) || {}) }; } catch { return blankResults; }
+  });
+  const [notice, setNotice] = useState("");
+  const persistTester = (next) => { setTester(next); window.localStorage.setItem("meridian-validator", JSON.stringify(next)); };
+  const persistResults = (next) => { setResults(next); window.localStorage.setItem("meridian-validation", JSON.stringify(next)); };
+  const tested = validationMissions.filter((mission) => results[mission.id].status !== "Untested").length;
+  const earned = validationMissions.reduce((sum, mission) => sum + (results[mission.id].status === "Pass" ? mission.weight : results[mission.id].status === "Friction" ? mission.weight * .5 : 0), 0);
+  const score = Math.round(earned);
+  const blockers = validationMissions.filter((mission) => results[mission.id].status === "Blocked").length;
+  const findings = validationMissions.filter((mission) => ["Friction", "Blocked"].includes(results[mission.id].status)).length;
+  const readiness = tested < validationMissions.length ? "Incomplete" : blockers ? "Not ready" : score >= 85 ? "Candidate" : "Revise";
+  const report = {
+    reportId: `VR-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}`,
+    created: new Date().toISOString(), tester, tested, total: validationMissions.length, score, readiness,
+    results: validationMissions.map((mission) => ({ ...mission, ...results[mission.id] })),
+    hardening: hardeningChecks
+  };
+  const exportReport = () => {
+    const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json;charset=utf-8" });
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = `${report.reportId}-meridian-validation.json`; link.click(); URL.revokeObjectURL(link.href);
+    setNotice("Validation evidence exported.");
+  };
+  const submitReport = async () => {
+    try {
+      const response = await fetch("/api/platform", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: report.reportId, collection: "validation", payload: report }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Shared submission unavailable");
+      setNotice("Validation report saved to durable platform storage.");
+    } catch {
+      window.localStorage.setItem(`meridian-${report.reportId}`, JSON.stringify(report));
+      setNotice("Report saved on this device. Export the JSON to share it with the Meridian steward.");
+    }
+  };
+  return <main className="validation-page">
+    <section className="validation-hero"><div><p className="eyebrow"><span /> EXTERNAL VALIDATION · REAL PEOPLE, REAL FRICTION</p><h1>Stop admiring it.<br /><em>Try to use it.</em></h1></div><p>The system is not validated because its builder can operate it. These missions test whether someone else can find, understand, apply, trace, and explain Meridian without us standing beside them.</p></section>
+    <section className="validation-score">
+      <article><span>Missions tested</span><strong>{tested}/{validationMissions.length}</strong><p>Every mission needs evidence</p></article>
+      <article><span>Usability score</span><strong>{score}</strong><p>Pass earns full weight; friction earns half</p></article>
+      <article><span>Findings</span><strong>{findings}</strong><p>Friction and blocked tasks</p></article>
+      <article><span>Release readiness</span><strong>{readiness}</strong><p>Evidence, not optimism</p></article>
+    </section>
+    <section className="tester-profile"><div><p className="kicker">Tester context</p><h2>Who encountered the system?</h2></div><div><label><span>Name or identifier</span><input value={tester.name} onChange={(event) => persistTester({ ...tester, name: event.target.value })} placeholder="First name or anonymous label" /></label><label><span>Relationship</span><select value={tester.relationship} onChange={(event) => persistTester({ ...tester, relationship: event.target.value })}><option>Independent tester</option><option>Family member</option><option>Potential learner</option><option>Potential client</option><option>Domain reviewer</option></select></label><label><span>Device and browser</span><input value={tester.device} onChange={(event) => persistTester({ ...tester, device: event.target.value })} placeholder="Phone, tablet, laptop…" /></label></div></section>
+    <section className="validation-missions">
+      {validationMissions.map((mission) => <article key={mission.id} className={`mission-${results[mission.id].status.toLowerCase()}`}>
+        <header><span>{mission.id}</span><b>{mission.weight} points</b><a href={mission.route}>Open task route ↗</a></header><h2>{mission.title}</h2><p>{mission.instruction}</p>
+        <div className="mission-evidence"><span>Evidence requested</span><p>{mission.evidence}</p></div>
+        <div className="mission-result"><label><span>Result</span><select value={results[mission.id].status} onChange={(event) => persistResults({ ...results, [mission.id]: { ...results[mission.id], status: event.target.value } })}><option>Untested</option><option>Pass</option><option>Friction</option><option>Blocked</option></select></label><label><span>Observed evidence and exact friction</span><textarea rows="4" value={results[mission.id].notes} onChange={(event) => persistResults({ ...results, [mission.id]: { ...results[mission.id], notes: event.target.value } })} placeholder="What happened? Quote confusing language and name the step where movement stopped." /></label></div>
+      </article>)}
+    </section>
+    <section className="hardening-audit"><header><div><p className="kicker">Production hardening</p><h2>What has actually been proven?</h2></div><p>{hardeningChecks.filter((item) => item[1] === "Pass").length} of {hardeningChecks.length} gates currently have implementation evidence.</p></header><div>{hardeningChecks.map(([name, status, evidence], index) => <article key={name}><span>{String(index + 1).padStart(2, "0")}</span><b className={`audit-${status.toLowerCase()}`}>{status}</b><h3>{name}</h3><p>{evidence}</p></article>)}</div></section>
+    <section className="validation-submit"><div><p className="kicker">Evidence package</p><h2>Preserve the result, including the uncomfortable parts.</h2><p>A signed-in steward can save the report to shared storage. Public testers can export the complete evidence package and send the file to the steward.</p></div><div><button onClick={submitReport}>Save validation report</button><button onClick={exportReport}>Export evidence JSON</button><button className="validation-reset" onClick={() => persistResults(blankResults)}>Reset mission results</button><p>{notice || "No result counts until a tester records observable evidence."}</p></div></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -1388,6 +1475,7 @@ export default function App() {
   if (path === "/studio") return <><Header /><StudioPage /><Footer /></>;
   if (path === "/releases") return <><Header /><ReleaseLibraryPage /><Footer /></>;
   if (path === "/platform") return <><Header /><PlatformPage /><Footer /></>;
+  if (path === "/validate") return <><Header /><ValidationCenterPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
