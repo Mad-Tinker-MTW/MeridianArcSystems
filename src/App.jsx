@@ -48,6 +48,7 @@ function Header() {
     ["#/mks", "MKS Library"],
     ["#/laws", "Laws"],
     ["#/patterns", "Patterns"],
+    ["#/instruments", "Instruments"],
     ["#/roadmap", "Roadmap"],
     ["#specification", "Specification"],
     ["#frameworks", "Frameworks"],
@@ -309,7 +310,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
+        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -425,6 +426,7 @@ function ObjectPage({ item }) {
             <article className="decision-checks"><p className="kicker">Decision checks</p>{item.checks.map((value) => <p key={value}>{value}</p>)}</article>
             <article className="gen-evidence"><p className="kicker">GEN evidence</p><p>{item.genEvidence}</p></article>
           </section>}
+          {item.worksheet && <InstrumentWorkbench item={item} />}
         </div>
         <aside className="object-relations">
           <p className="filter-title">Relationships</p>
@@ -438,6 +440,29 @@ function ObjectPage({ item }) {
       <section className="next-object"><a href="#/mks">← Return to all knowledge objects</a></section>
     </main>
   );
+}
+
+function InstrumentWorkbench({ item }) {
+  const initial = Object.fromEntries(item.worksheet.map(([label, , type]) => [label, type === "scale" ? "3" : ""]));
+  const [answers, setAnswers] = useState(initial);
+  const completed = item.worksheet.filter(([label]) => String(answers[label] || "").trim()).length;
+  const update = (label, value) => setAnswers((current) => ({ ...current, [label]: value }));
+  return <section className="workbench">
+    <div className="protocol-heading"><p className="kicker">Live worksheet</p><h2>Use the instrument<br />on a real situation.</h2></div>
+    <div className="workbench-progress"><span>{completed} / {item.worksheet.length} fields complete</span><i style={{ width: `${(completed / item.worksheet.length) * 100}%` }} /></div>
+    <div className="worksheet-fields">
+      {item.worksheet.map(([label, prompt, type]) => <label key={label}>
+        <span><b>{label}</b><small>{prompt}</small></span>
+        {type === "scale" ? <div className="scale-input"><input type="range" min="1" max="5" value={answers[label]} onChange={(event) => update(label, event.target.value)} /><output>{answers[label]} / 5</output></div> : <textarea value={answers[label]} onChange={(event) => update(label, event.target.value)} placeholder="Record evidence, not just an opinion…" rows="3" />}
+      </label>)}
+    </div>
+    <div className="instrument-guidance">
+      <article><p className="kicker">Interpretation</p>{item.interpretation.map((value) => <p key={value}>{value}</p>)}</article>
+      <article><p className="kicker">Worked example</p><p>{item.workedExample}</p></article>
+    </div>
+    <button className="reset-workbench" onClick={() => setAnswers(initial)}>Clear worksheet</button>
+    <p className="local-note">This working sheet stays in this browser session. Record the completed result in the relevant project system when it becomes evidence.</p>
+  </section>;
 }
 
 function RoadmapPage() {
@@ -518,6 +543,27 @@ function PatternsPage() {
   </main>;
 }
 
+function InstrumentsPage() {
+  const instruments = mksObjects.filter((item) => item.classification === "Instrument");
+  return <main className="instruments-page">
+    <section className="instruments-hero">
+      <p className="eyebrow"><span /> JUDGMENT, EXTENDED</p>
+      <h1>Five instruments.<br /><em>Built to be used.</em></h1>
+      <p>An instrument does not replace judgment. It makes evidence, position, direction, guidance, or learning visible enough for judgment to improve.</p>
+    </section>
+    <section className="instrument-grid">
+      {instruments.map((item, index) => <a href={`#/mks/${item.id}`} key={item.id}>
+        <div className={`instrument-glyph instrument-${index + 1}`}><i /><i /><i /></div>
+        <p className="kicker">{item.id} · LIVE WORKSHEET</p>
+        <h2>{item.title}</h2>
+        <p>{item.statement}</p>
+        <span>{item.worksheet.length} evidence fields <b>↗</b></span>
+      </a>)}
+    </section>
+    <section className="instrument-rule section"><p className="kicker">Instrument rule</p><h2>The reading informs the steward.<br />The steward remains responsible.</h2></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState(typeof window === "undefined" ? "#/" : (window.location.hash || "#/"));
   useEffect(() => {
@@ -532,6 +578,7 @@ export default function App() {
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
+  if (path === "/instruments") return <><Header /><InstrumentsPage /><Footer /></>;
   if (path === "/roadmap") return <><Header /><RoadmapPage /><Footer /></>;
   return <><Header /><main><Hero /><Origin /><Specification /><Reaction /><Frameworks /><Metrics /><Laws /><Homes /><Begin /></main><Footer /></>;
 }
