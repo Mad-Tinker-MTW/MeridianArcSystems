@@ -318,17 +318,53 @@ const lawSpecs = Object.fromEntries(lawDetails.map(([id, purpose, rationale, val
   genEvidence: "A law test counts as completed GEN only when the situation, evidence, boundary, decision, and reviewable outcome are recorded."
 }]));
 
+const patternDetails = [
+  ["P-001", ["Decisions repeatedly reopen", "Research expands without narrowing the choice", "People seek certainty that the situation cannot provide"], ["The decision boundary is undefined", "Consequences and reversibility are not distinguished", "No accountable decider or stopping rule exists"], "Adding more information without naming what evidence would be sufficient.", "Define the smallest reversible decision and the evidence required to take it.", ["A bounded decision is made", "New evidence has a stated role", "The decision stays closed until its review condition"], ["F-002", "F-005", "L-008"]],
+  ["P-002", ["Critical work waits for one person", "Delegation returns as questions or rescue", "Absence stops improvement or delivery"], ["Knowledge and authority remain tacit", "Handoffs transfer tasks but not judgment", "The creator is rewarded for intervention"], "Assigning more tasks while preserving all decisions with the founder.", "Transfer one complete decision domain with its knowledge, authority, and feedback.", ["Work continues during absence", "A second steward can decide and teach", "Founder intervention becomes exceptional"], ["L-004", "L-005", "F-006"]],
+  ["P-003", ["Small choices feel disproportionately difficult", "Important judgment is delayed late in the day", "Standards vary as attention declines"], ["Repeated choices have not become policy", "Low-value decisions interrupt high-value work", "Defaults and ownership are unclear"], "Trying to become more disciplined while leaving the decision volume unchanged.", "Turn one recurring low-value choice into a trusted default or rule.", ["Fewer repeated decisions reach a human", "High-consequence choices receive protected attention", "Exceptions are visible"], ["L-010", "F-002", "D-003"]],
+  ["P-004", ["Deliverables grow while completion recedes", "New requests enter without displacing old work", "The original purpose becomes hard to state"], ["The work lacks an explicit boundary", "Tradeoffs are hidden", "Progress is measured by inclusion rather than outcome"], "Creating a larger plan that accommodates every addition.", "Restate the purpose and require every addition to name what it replaces.", ["Scope changes are explicit decisions", "Completion conditions remain stable", "The delivered result serves the original purpose"], ["L-001", "F-009", "F-002"]],
+  ["P-005", ["Recovery no longer restores capacity", "Work requires increasing effort for the same result", "Cynicism, withdrawal, or error rises"], ["Demand persistently exceeds renewable human energy", "Responsibility is not matched by control or support", "The system treats individual endurance as capacity"], "Offering recovery advice while preserving the conditions consuming the person.", "Remove or transfer one recurring demand and restore control over a meaningful boundary.", ["Sustainable capacity returns", "Required effort no longer rises", "The system changes—not only the individual"], ["L-010", "F-010", "P-003"]],
+  ["P-006", ["Teams recreate known work", "Answers depend on knowing whom to ask", "Decisions conflict across boundaries"], ["Knowledge is stored with people rather than accessible systems", "Documentation is detached from real work", "Sharing creates cost without visible reward"], "Launching another repository without embedding transfer into the workflow.", "Capture one high-cost recurring answer at the moment it is used and connect it to its owner.", ["The answer is found without private routing", "Reuse is observable", "Knowledge gains a steward and revision path"], ["L-003", "L-004", "F-003"]],
+  ["P-007", ["Work remains nearly finished", "Standards rise as delivery approaches", "Feedback is postponed until confidence is impossible"], ["Identity or safety is attached to flawlessness", "Reversible and irreversible decisions are treated alike", "The learning value of release is discounted"], "Setting a more ambitious deadline while retaining an undefined standard of perfect.", "Define the smallest credible, reversible release and its explicit quality floor.", ["A real artifact reaches review", "Feedback replaces imagined judgment", "Quality improves through cycles"], ["L-006", "L-008", "F-005"]],
+  ["P-008", ["Verification and escalation increase", "Commitments require repeated follow-up", "People protect themselves with private records or workarounds"], ["Promises and outcomes repeatedly diverge", "Bad news travels slowly", "Accountability is ambiguous or consequence-free"], "Demanding trust or adding surveillance without repairing reliability.", "Make one meaningful commitment observable, owned, and reliably closed.", ["Commitments predict outcomes more accurately", "Bad news appears earlier", "Verification cost declines"], ["L-009", "L-011", "F-010"]],
+  ["P-009", ["Deep work rarely reaches momentum", "Many tasks are active but few complete", "Reorientation consumes visible time"], ["Interruptions are treated as free", "Work lacks protected completion windows", "Ownership and urgency signals are poorly designed"], "Using personal focus techniques while the surrounding interruption system remains unchanged.", "Protect one complete work interval and create a visible intake point for noncritical demands.", ["Completion rises without longer hours", "Interruptions become explicit choices", "Reorientation time declines"], ["L-010", "F-009", "P-003"]],
+  ["P-010", ["Old questions repeatedly return", "Work depends on remembered context", "Small changes carry surprising risk"], ["Decisions and assumptions were not recorded", "Temporary exceptions became permanent", "Unresolved ambiguity accumulated interest"], "Adding new tools or features on top of undocumented decisions.", "Close one recurring ambiguity with a decision record, owner, and review condition.", ["Repeated explanation declines", "Changes require less reconstruction", "Future decisions start from stronger orientation"], ["L-003", "F-007", "F-003"]]
+];
+
+const patternSpecs = Object.fromEntries(patternDetails.map(([id, symptoms, causes, falseFix, catalyst, successSignals, relationships]) => [id, {
+  status: "Foundation",
+  purpose: `Recognize and interrupt ${rawObjects.find((item) => item.id === id)?.title} as a system condition rather than a personal label.`,
+  rationale: "A named pattern becomes useful when its observable signals, producing conditions, and first intervention can be distinguished.",
+  validity: "Apply only when multiple symptoms recur and plausible system causes are supported by observation. Do not diagnose a person from one event.",
+  applications: ["Pattern recognition", "System diagnosis", "Intervention design"],
+  examples: [`A steward records recurring signals of ${rawObjects.find((item) => item.id === id)?.title}, tests a system cause, and runs one bounded intervention.`],
+  counterexamples: [falseFix],
+  relationships,
+  symptoms, causes, falseFix, catalyst, successSignals,
+  inputs: ["Recurring observable signals", "Context across more than one event", "People affected by the condition", "A bounded place to intervene"],
+  outputs: ["A pattern hypothesis", "A tested system cause", "A first catalyst", "Success and stop signals"],
+  steps: [
+    ["Observe recurrence", "Record when, where, and for whom the symptoms appear."],
+    ["Test system causes", "Look for conditions that remain present across events."],
+    ["Reject the false fix", falseFix],
+    ["Place the catalyst", catalyst],
+    ["Read the reaction", `Look for: ${successSignals.join("; ")}.`]
+  ],
+  checks: ["Are several symptoms recurring?", "Does evidence support a system cause?", "Will the catalyst change a condition rather than blame a person?"],
+  genEvidence: "A pattern intervention counts as completed GEN when the observed signals, tested cause, delivered catalyst, and measured reaction are reviewable."
+}]));
+
 export const mksObjects = rawObjects.map((item) => ({
   ...item,
-  maturity: (operationalSpecs[item.id] || lawSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
-  ...(operationalSpecs[item.id] || lawSpecs[item.id] || {})
+  maturity: (operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
+  ...(operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || {})
 }));
 
 export const roadmap = [
   { phase: "Built", count: 43, label: "Knowledge objects have permanent, searchable homes.", status: "Complete" },
-  { phase: "Operational", count: 21, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
-  { phase: "Next", count: 10, label: "Pattern seeds need symptoms, causes, catalysts, and intervention maps.", status: "Queued" },
-  { phase: "Then", count: 5, label: "Instrument seeds need worksheets, scales, and worked examples.", status: "Queued" }
+  { phase: "Operational", count: 31, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
+  { phase: "Next", count: 5, label: "Instrument seeds need worksheets, scales, and worked examples.", status: "Queued" },
+  { phase: "Then", count: 3, label: "Remaining framework seeds need full operating protocols.", status: "Queued" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
