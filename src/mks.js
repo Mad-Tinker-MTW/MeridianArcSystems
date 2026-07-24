@@ -354,17 +354,107 @@ const patternSpecs = Object.fromEntries(patternDetails.map(([id, symptoms, cause
   genEvidence: "A pattern intervention counts as completed GEN when the observed signals, tested cause, delivered catalyst, and measured reaction are reviewable."
 }]));
 
+const instrumentSpecs = {
+  "I-001": {
+    status: "Foundation",
+    purpose: "Test whether a proposed action remains aligned with purpose, people, time, and stewardship.",
+    rationale: "Direction can look efficient while moving a system away from the reason it exists.",
+    validity: "Use before consequential action or when momentum has made purpose less visible. The Compass informs judgment; it does not make the decision.",
+    applications: ["Decision review", "Project initiation", "Governance"],
+    relationships: ["F-002", "L-001", "L-010"],
+    inputs: ["A proposed action", "The purpose it should serve", "People affected", "Time and stewardship consequences"],
+    outputs: ["An alignment profile", "A visible tension", "A proceed, revise, pause, or stop decision"],
+    steps: [["Name true north", "Write the purpose without describing the proposed action."], ["Score four bearings", "Assess purpose, people, time, and stewardship from 1 to 5."], ["Find the weakest bearing", "Treat the lowest score as the first question, not an average to hide."], ["Record the decision", "Proceed, revise, pause, or stop—and state the evidence required for review."]],
+    checks: ["Is purpose independent of the proposed solution?", "Whose time or agency changes?", "What stewardship obligation continues after launch?"],
+    worksheet: [
+      ["True north", "What purpose must this action serve?", "text"],
+      ["Purpose alignment", "Does it directly serve that purpose?", "scale"],
+      ["People alignment", "Does it protect dignity, agency, and needed judgment?", "scale"],
+      ["Time alignment", "Whose time is conserved—and whose is consumed?", "scale"],
+      ["Stewardship alignment", "Can consequences be observed and responsibly governed?", "scale"],
+      ["Decision", "Proceed, revise, pause, or stop. Why?", "text"]
+    ],
+    interpretation: ["1–2: stop and investigate", "3: unresolved—revise or gather evidence", "4–5: aligned enough to proceed with stewardship"],
+    workedExample: "A team considering automated customer triage scores purpose 5, people 2, time 4, and stewardship 3. The low people score prevents a confident launch; they add explanation, appeal, and human review before proceeding.",
+    genEvidence: "The completed Compass record, its evidence, and the resulting decision form the reviewable artifact."
+  },
+  "I-002": {
+    status: "Foundation",
+    purpose: "Establish position under uncertainty by comparing current observations with trusted references.",
+    rationale: "When direct visibility is poor, position can still be inferred from stable external signals.",
+    validity: "Use only with references whose relevance and reliability can be explained. A precise answer from weak references is false confidence.",
+    applications: ["Ambiguous projects", "Risk assessment", "Organizational diagnosis"],
+    relationships: ["F-001", "L-001", "F-008"],
+    inputs: ["An uncertain position", "Two or more trusted references", "Current observations", "Confidence limits"],
+    outputs: ["A position hypothesis", "A confidence statement", "The next observation needed"],
+    steps: [["Name the unknown", "State the position question precisely."], ["Choose references", "Select stable signals and explain why each is trustworthy."], ["Take observations", "Record current evidence without forcing agreement."], ["Triangulate", "Compare where references converge and diverge."], ["State position and confidence", "Name the best current position and what would change it."]],
+    checks: ["Are the references independent?", "Could they share the same hidden error?", "What observation would most change confidence?"],
+    worksheet: [["Position question", "What are you trying to locate or understand?", "text"], ["Reference one", "Trusted signal and why it matters", "text"], ["Reference two", "Independent signal and why it matters", "text"], ["Observation", "What does current reality show?", "text"], ["Confidence", "How confident are you in the position?", "scale"], ["Next sighting", "What evidence would most improve orientation?", "text"]],
+    interpretation: ["1–2: position is speculative", "3: usable only for reversible movement", "4–5: sufficiently oriented for the stated risk"],
+    workedExample: "A new service lacks direct retention data. The team triangulates repeat usage, voluntary referrals, and support dependence, then records moderate confidence and the next cohort measure needed.",
+    genEvidence: "A completed position hypothesis must preserve references, observations, confidence, and the next sighting."
+  },
+  "I-003": {
+    status: "Foundation",
+    purpose: "Separate the visible near-term route from longer-range direction and uncertainty.",
+    rationale: "Teams confuse what can be planned now with what can only be held as direction, producing either rigidity or drift.",
+    validity: "Use when near-term commitments and long-term intent must coexist. The horizon is expected to move as the system advances.",
+    applications: ["Roadmapping", "Strategy", "Portfolio planning"],
+    relationships: ["F-009", "L-006", "M-001"],
+    inputs: ["Long-range direction", "Current visibility", "Near-term commitments", "Signals that would move the horizon"],
+    outputs: ["A near horizon", "A directional horizon", "Explicit no-plan-beyond-this boundary"],
+    steps: [["Name direction", "State the future quality or capability being pursued."], ["Mark visibility", "Separate what is observable from what is assumed."], ["Commit near", "Plan only the work that current visibility can support."], ["Hold far as direction", "Describe longer-range intent without false detail."], ["Set horizon signals", "Name evidence that will justify extending or changing the route."]],
+    checks: ["Which detail is knowable now?", "What are we pretending to know?", "Which signal permits the next planning horizon?"],
+    worksheet: [["Direction", "What longer-range capability are we pursuing?", "text"], ["Visible terrain", "What can we responsibly see and plan now?", "text"], ["Near commitment", "What will be completed in the current horizon?", "text"], ["Beyond the horizon", "What remains direction rather than plan?", "text"], ["Horizon signal", "What evidence lets us extend or change the route?", "text"]],
+    interpretation: ["A healthy Horizon has concrete near commitments and deliberately low detail beyond current visibility."],
+    workedExample: "Meridian commits to an operational Pattern Library now while holding Academy certification as direction until real use reveals the curriculum.",
+    genEvidence: "The horizon artifact is complete when near commitments, far direction, and extension signals are explicit."
+  },
+  "I-004": {
+    status: "Foundation",
+    purpose: "Make stable guidance visible at recurring moments of risk, pressure, or disorientation.",
+    rationale: "People often need guidance most when attention is least available to reconstruct it.",
+    validity: "Use for recurring decision points with a stable principle and clear escalation path. Do not use slogans to replace case-specific judgment.",
+    applications: ["Safety", "Service standards", "Escalation design"],
+    relationships: ["L-010", "L-011", "F-010"],
+    inputs: ["A recurring risk point", "Stable guidance", "Observable trigger", "Safe action and escalation"],
+    outputs: ["A lighthouse statement", "Trigger-action guidance", "An owner and review cadence"],
+    steps: [["Locate the hazard", "Identify the recurring point where judgment degrades or risk rises."], ["Define the signal", "Make the trigger recognizable in real time."], ["Write stable guidance", "State the smallest principle that remains true under pressure."], ["Connect action and escalation", "Specify what to do and when human judgment must enter."], ["Assign stewardship", "Give the lighthouse an owner and review date."]],
+    checks: ["Will the signal be visible under pressure?", "Is the guidance stable but not simplistic?", "Who maintains and can retire it?"],
+    worksheet: [["Hazard", "Where does recurring risk or disorientation appear?", "text"], ["Signal", "What observable condition activates guidance?", "text"], ["Stable guidance", "What must remain true under pressure?", "text"], ["Safe action", "What should happen immediately?", "text"], ["Escalation", "When and to whom must judgment transfer?", "text"], ["Steward", "Who reviews this guidance and when?", "text"]],
+    interpretation: ["A lighthouse is useful only when its signal, immediate action, escalation, and owner are all visible."],
+    workedExample: "An AI support system flags low-confidence medical language, gives no recommendation, and transfers the case to a trained human with the original context intact.",
+    genEvidence: "Count the deployed guidance only when trigger, action, escalation, ownership, and review are testable."
+  },
+  "I-005": {
+    status: "Foundation",
+    purpose: "Record the route reality revealed so another person can navigate, challenge, and improve it.",
+    rationale: "A route kept only in memory cannot transfer capability or compound learning.",
+    validity: "Map observed decisions and evidence, not a cleaned-up story that erases detours and uncertainty.",
+    applications: ["After-action review", "Playbooks", "Knowledge transfer"],
+    relationships: ["L-003", "L-004", "F-003"],
+    inputs: ["Starting orientation", "Decision junctions", "Evidence and detours", "Current destination or stopping point"],
+    outputs: ["A route record", "Reusable waypoints", "Known hazards and unresolved territory"],
+    steps: [["Mark the origin", "Record the actual starting condition and confidence."], ["Capture junctions", "Document consequential choices and rejected routes."], ["Place waypoints", "Preserve evidence or capabilities worth reusing."], ["Mark hazards and unknowns", "Keep failures, constraints, and uncertainty visible."], ["Publish the next route", "Make the map accessible with an owner and revision path."]],
+    checks: ["Could another person reproduce the route?", "Are detours and failures preserved?", "Who can correct the map when reality changes?"],
+    worksheet: [["Origin", "Where did the work actually begin?", "text"], ["Destination", "What outcome or stopping point was reached?", "text"], ["Junctions", "Which choices materially changed the route?", "text"], ["Waypoints", "What evidence or capability should be reused?", "text"], ["Hazards", "What failed, constrained, or remains uncertain?", "text"], ["Next cartographer", "Who owns revision and continuation?", "text"]],
+    interpretation: ["A useful map transfers judgment, not merely the sequence of tasks."],
+    workedExample: "After building the MKS Library, the route record preserves the decision to use permanent knowledge objects, the hash-routing constraint, deployment lessons, and the next unbuilt instrument layer.",
+    genEvidence: "The route map counts when another person can review the evidence, follow the choices, and continue the work."
+  }
+};
+
 export const mksObjects = rawObjects.map((item) => ({
   ...item,
-  maturity: (operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
-  ...(operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || {})
+  maturity: (operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
+  ...(operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id] || {})
 }));
 
 export const roadmap = [
   { phase: "Built", count: 43, label: "Knowledge objects have permanent, searchable homes.", status: "Complete" },
-  { phase: "Operational", count: 31, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
-  { phase: "Next", count: 5, label: "Instrument seeds need worksheets, scales, and worked examples.", status: "Queued" },
-  { phase: "Then", count: 3, label: "Remaining framework seeds need full operating protocols.", status: "Queued" }
+  { phase: "Operational", count: 36, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
+  { phase: "Next", count: 7, label: "Remaining frameworks need full operating protocols.", status: "Queued" },
+  { phase: "Then", count: 27, label: "The glossary needs permanent, cross-linked definitions.", status: "Queued" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
