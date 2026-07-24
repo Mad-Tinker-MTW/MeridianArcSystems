@@ -123,6 +123,22 @@ const rawObjects = [
     relationships: ["F-001", "F-005", "F-007"], version: "0.5"
   },
   ...[
+    ["M-002", "Orientation Brief", "Convert observations, assumptions, unknowns, and reference signals into a bounded statement of present position.", ["F-001", "I-002", "L-001"]],
+    ["M-003", "Catalyst Design", "Specify the minimum sufficient initiating action, intended second action, evidence signals, and safeguards.", ["F-005", "D-003", "L-008"]],
+    ["M-004", "Transfer Review", "Examine whether knowledge, execution, judgment, and ownership moved beyond the original creator.", ["F-006", "L-004", "L-005"]],
+    ["M-005", "Reaction Reflection", "Compare intended and observed reactions, preserve discrepancy, and convert learning into the next orientation.", ["F-007", "L-011", "M-001"]],
+    ["M-006", "System Stewardship Review", "Review purpose, transfer, feedback, resilience, independence, harm, and accountable continuation.", ["F-010", "I-005", "L-010"]]
+  ].map(([id, title, statement, relationships]) => ({
+    id, title, statement, relationships, classification: "Method", status: "Foundation",
+    purpose: "Provide a repeatable operating protocol that produces a reviewable Meridian artifact.",
+    rationale: "Methods convert a way of seeing into consistent action, evidence, and transfer.",
+    validity: "Use when the named output is necessary for another person to inspect, continue, or challenge the work.",
+    applications: ["System design", "Governance", "Teaching", "Operational review"],
+    examples: [`Apply ${title} to one live system and preserve the completed record for an independent reviewer.`],
+    counterexamples: ["Completing the steps without producing evidence another person can inspect or use."],
+    version: "0.6"
+  })),
+  ...[
     ["I-001", "Meridian Compass", "Tests whether action remains aligned with purpose."],
     ["I-002", "Meridian Sextant", "Uses known references to establish position under uncertainty."],
     ["I-003", "Meridian Horizon", "Distinguishes immediate visibility from longer-range direction."],
@@ -670,8 +686,8 @@ export function getAcademyPath(id) {
 }
 
 export const roadmap = [
-  { phase: "Built", count: 113, label: "Knowledge objects, glossary terms, applications, learning paths, measurement, memory, experimentation, translation, governance, and reader releases now have permanent homes.", status: "Complete" },
-  { phase: "Operational", count: 43, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
+  { phase: "Built", count: 123, label: "The knowledge system now includes evidence mapping, durable records, roles, administration, expanded methods, and reader releases.", status: "Complete" },
+  { phase: "Operational", count: 48, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
   { phase: "Glossary", count: 27, label: "Core terms have definitions, distinctions, examples, and cross-links.", status: "Complete" },
   { phase: "Applications", count: 25, label: "Worked scenarios test Meridian across eight real-life domains.", status: "Complete" },
   { phase: "Academy", count: 10, label: "Guided paths teach independent use and end in observable mastery.", status: "Complete" },
@@ -681,7 +697,8 @@ export const roadmap = [
   { phase: "Studio", count: 1, label: "Specification objects now compile into traceable field guides, lessons, and executive briefs for named audiences.", status: "Complete" },
   { phase: "Publication", count: 1, label: "Studio drafts now pass through accountable review, evidence, revision, acceptance, and release states.", status: "Complete" },
   { phase: "Release Library", count: 2, label: "Reviewed publications now have reader-facing records, provenance, revision details, and downloadable copies.", status: "Complete" },
-  { phase: "Next", count: 1, label: "The Meridian Evidence Graph will make relationships between claims, experiments, applications, publications, and outcomes visible.", status: "Active" }
+  { phase: "Platform", count: 5, label: "Evidence Graph, D1 records, role authority, governance administration, and five expanded methods operate as one milestone.", status: "Complete" },
+  { phase: "Next", count: 1, label: "External-user validation and production hardening now replace internal feature expansion as the priority.", status: "Active" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
