@@ -75,7 +75,7 @@ const patterns = [
   version: "0.5"
 }));
 
-export const mksObjects = [
+const rawObjects = [
   {
     id: "D-001", title: "The First Domino", classification: "Doctrine", status: "Locked",
     statement: "The first domino is not part of the pattern. It is the plan that initiates the realization of the pattern.",
@@ -161,6 +161,143 @@ export const mksObjects = [
     counterexamples: ["Optimizing the number while ignoring truth, safety, quality, or downstream cost."],
     relationships: ["G-001", "L-010", "L-012"], version: "0.5"
   }
+];
+
+const operationalSpecs = {
+  "D-001": {
+    inputs: ["A purpose worth initiating", "A defined first transfer", "A real recipient or responding system"],
+    outputs: ["An observable second action", "Evidence about the emerging pattern", "A decision to continue, adapt, or stop"],
+    steps: [
+      ["Name the reaction", "State what should begin moving after the initiating act."],
+      ["Identify the second domino", "Define the first observable transfer that proves initiation occurred."],
+      ["Place the minimum true action", "Build only enough to make the transfer possible and reviewable."],
+      ["Observe without defending", "Record what reality does, including resistance and unexpected movement."],
+      ["Decide from evidence", "Continue, alter, or retire the plan based on the reaction—not attachment."]
+    ],
+    checks: ["Can the intended second action be observed?", "Does the first action transfer useful energy?", "Will the reaction teach us something we could not know in planning?"],
+    genEvidence: "Count completed GEN only for the reviewable initiating artifact and the recorded learning it produces—not for intention alone."
+  },
+  "D-002": {
+    inputs: ["A completed initiating action", "An intended transfer", "An observable downstream actor or event"],
+    outputs: ["A transfer assessment", "A continuity decision", "A documented point of energy loss"],
+    steps: [
+      ["Trace the transfer", "Follow the work beyond the creator to the next actor or system."],
+      ["Locate the stop", "Find where movement weakens, waits, or returns for rescue."],
+      ["Strengthen the handoff", "Add the smallest condition that makes the next action reliable."],
+      ["Test continuity", "Remove the initiator temporarily and observe whether useful motion continues."]
+    ],
+    checks: ["Did value reach a second participant?", "Can the transfer be repeated?", "Does the system still require avoidable rescue?"],
+    genEvidence: "GEN is evidenced by a completed handoff that another person or system can review and reuse."
+  },
+  "D-003": {
+    inputs: ["A desired beneficial reaction", "Candidate initiating actions", "Constraints on human time and risk"],
+    outputs: ["A selected catalyst", "A bounded test", "A stop or scale condition"],
+    steps: [
+      ["Define beneficial", "Name who benefits, how, and what harm must be avoided."],
+      ["List candidate catalysts", "Identify actions that could reach the first necessary transfer."],
+      ["Compare leverage", "Estimate transfer potential, required effort, reversibility, and learning."],
+      ["Run the smallest sufficient test", "Invest enough energy to produce a credible reaction."],
+      ["Scale only after transfer", "Increase investment when evidence shows the reaction can carry it."]
+    ],
+    checks: ["Is the action sufficient, not merely small?", "Is the expected reaction beneficial and observable?", "Can the test be stopped or corrected?"],
+    genEvidence: "Record the delivered catalyst, the human time invested, and the completed capability produced."
+  },
+  "F-001": {
+    inputs: ["Current reality", "Desired destination", "Known constraints", "Available references"],
+    outputs: ["A current-position statement", "A confidence level", "The next orientation question"],
+    steps: [
+      ["Observe position", "Describe present conditions without prescribing movement."],
+      ["Separate known from assumed", "Mark evidence, interpretation, and unknowns distinctly."],
+      ["Choose references", "Use stable facts or trusted signals to establish position."],
+      ["State orientation", "Summarize where the system stands and how certain that statement is."],
+      ["Authorize navigation", "Move only when orientation is sufficient for the risk involved."]
+    ],
+    checks: ["What do we know directly?", "Which assumption would most change the route?", "Is our confidence appropriate to the consequence?"],
+    genEvidence: "A completed orientation brief counts when its evidence, assumptions, and next question are reviewable."
+  },
+  "F-002": {
+    inputs: ["A real choice", "Purpose", "Candidate options", "Consequences and time horizon"],
+    outputs: ["A decision record", "A stated tradeoff", "A review condition"],
+    steps: [
+      ["Restate purpose", "Define what the decision is meant to protect or create."],
+      ["Name viable options", "Include the option to wait or do nothing when it is real."],
+      ["Examine consequence", "Consider immediate, transferred, and delayed effects."],
+      ["Test time", "Ask whether the decision conserves or consumes future human attention."],
+      ["Commit and review", "Choose, record why, and define what evidence could reopen it."]
+    ],
+    checks: ["Does this serve the stated purpose?", "Who inherits the consequence?", "What future attention does this choice create or remove?"],
+    genEvidence: "A decision counts as completed work when the choice, rationale, owner, and review condition are recorded."
+  },
+  "F-005": {
+    inputs: ["A desired reaction", "The first required transfer", "Available energy", "Failure boundaries"],
+    outputs: ["A catalyst hypothesis", "A minimum sufficient action", "Reaction measures"],
+    steps: [
+      ["Define the reaction", "Describe continued movement, not just the first event."],
+      ["Find the transfer point", "Identify what must move from the catalyst to the next element."],
+      ["Set sufficient energy", "Determine the least effort credible enough to reach that transfer."],
+      ["Instrument the reaction", "Choose signals for movement, learning, harm, and continuity."],
+      ["Release and steward", "Initiate, observe, and intervene only where evidence requires it."]
+    ],
+    checks: ["What exactly receives the transferred energy?", "How will we know the reaction is carrying itself?", "What condition requires intervention or shutdown?"],
+    genEvidence: "GEN is completed when the catalyst and its measured reaction are delivered in a reviewable form."
+  },
+  "M-001": {
+    inputs: ["A meaningful situation", "A responsible steward", "A bounded cycle", "A place to record evidence"],
+    outputs: ["A reality-tested intervention", "A learning record", "A stronger next orientation"],
+    steps: [
+      ["Observe", "Attend to reality before naming the answer."],
+      ["Orient", "Establish position, references, purpose, and uncertainty."],
+      ["Discover", "Find the unknowns and relationships that materially shape action."],
+      ["Design", "Create a bounded response with explicit transfer and feedback."],
+      ["Catalyze", "Apply the minimum necessary initiating energy."],
+      ["React", "Allow the system and reality to answer."],
+      ["Reflect", "Compare intent, action, and observed consequence."],
+      ["Learn", "Turn evidence into a change in understanding or capability."],
+      ["Compound", "Make the useful learning reusable."],
+      ["Steward", "Protect continuity and begin the next cycle from stronger orientation."]
+    ],
+    checks: ["What did reality reveal?", "What capability now exists that did not exist before?", "What should the next cycle inherit?"],
+    genEvidence: "Close the cycle with a reviewable artifact, completed GEN, human time invested, RoT, and the capability transferred."
+  },
+  "G-001": {
+    inputs: ["A completed intellectual artifact", "Review evidence", "A reuse or capability claim"],
+    outputs: ["A GEN record", "An evidence link", "A classification of contribution"],
+    steps: [
+      ["Confirm completion", "The artifact must be usable and reviewable in its current state."],
+      ["Name specialization", "Identify the domain-specific intellectual work performed."],
+      ["Test meaningfulness", "State the capability, understanding, or value that increased."],
+      ["Test reusability", "Show how the result can inform or enable future work."],
+      ["Record GEN", "Log the unit estimate with evidence and reviewer context."]
+    ],
+    checks: ["Is there a completed artifact?", "Can another person review the claimed contribution?", "Does it create reusable capability rather than temporary activity?"],
+    genEvidence: "The GEN record must cite the completed artifact and explain the increase in capability, understanding, or value."
+  },
+  "G-002": {
+    inputs: ["Completed GEN", "Human hours directly invested", "Comparable work context"],
+    outputs: ["RoT in gen per human hour", "A scope note", "A decision-use warning"],
+    steps: [
+      ["Set the boundary", "Define which completed work and human time belong to the comparison."],
+      ["Validate GEN", "Use only completed, reviewable GEN records."],
+      ["Count human time", "Include direct human attention required to produce and review the result."],
+      ["Calculate", "Divide completed GEN by invested human hours."],
+      ["Interpret carefully", "Use the result with quality, risk, and downstream cost—not alone."]
+    ],
+    checks: ["Are the compared scopes similar?", "Was review time included?", "Could a higher number be hiding lower quality or transferred cost?"],
+    genEvidence: "Preserve the numerator, denominator, scope, and date so the calculation can be reviewed."
+  }
+};
+
+export const mksObjects = rawObjects.map((item) => ({
+  ...item,
+  maturity: operationalSpecs[item.id] ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
+  ...(operationalSpecs[item.id] || {})
+}));
+
+export const roadmap = [
+  { phase: "Built", count: 43, label: "Knowledge objects have permanent, searchable homes.", status: "Complete" },
+  { phase: "Operational", count: 9, label: "Priority entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
+  { phase: "Next", count: 12, label: "Meridian Laws need individual validity conditions, examples, and tests.", status: "Queued" },
+  { phase: "Then", count: 10, label: "Pattern seeds need symptoms, causes, catalysts, and intervention maps.", status: "Queued" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
