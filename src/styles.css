@@ -20,6 +20,7 @@
 
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; background: var(--ink); overflow-x: hidden; }
+section[id], main[id] { scroll-margin-top: 96px; }
 button, input { font: inherit; }
 a { color: inherit; text-decoration: none; }
 p { line-height: 1.65; }
@@ -807,6 +808,8 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
 .revision b { color: #9ba9a9; font-size: 9px; font-weight: 500; text-align: right; }
 .next-object { border-top: 1px solid var(--line); padding: 35px 0 80px; color: var(--gold-light); font-size: 11px; text-transform: uppercase; letter-spacing: .14em; }
 .library-roadmap { padding: 100px clamp(28px, 7vw, 118px); display: grid; grid-template-columns: .7fr 1.3fr; gap: 10%; background: #e8e4d8; color: #10202a; }
+.library-roadmap .kicker, .roadmap-standard .kicker, .pattern-principle .kicker, .release-principle .kicker, .instrument-rule .kicker { color: #5f4b20; }
+.library-roadmap .roadmap-list article > span, .library-roadmap .roadmap-list article > b { color: #514f48; }
 .roadmap-list { border-top: 1px solid rgba(16,32,42,.17); }
 .roadmap-list article { display: grid; grid-template-columns: 75px 60px 1fr 70px; gap: 20px; align-items: center; min-height: 90px; border-bottom: 1px solid rgba(16,32,42,.13); }
 .roadmap-list article > span, .roadmap-list article > b { color: #7b766a; font-size: 8px; text-transform: uppercase; letter-spacing: .14em; }
@@ -1058,7 +1061,7 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .begin::after { width: 570px; height: 570px; }
   .footer-links { gap: 17px; }
   .footer-bottom { flex-direction: column; gap: 8px; }
-  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page, .labs-page, .studio-page, .releases-page, .release-page, .platform-page, .validation-page { padding-top: 72px; }
+  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page, .labs-page, .studio-page, .releases-page, .release-page, .platform-page, .validation-page { padding-top: 76px; }
   .library-hero { padding: 70px 24px 55px; }
   .library-results { padding: 35px 24px 80px; }
   .result-meta span:last-child { display: none; }
