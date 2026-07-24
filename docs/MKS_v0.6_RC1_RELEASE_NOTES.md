@@ -1,14 +1,14 @@
 # Meridian Knowledge Specification v0.6 RC1
 
-**Status:** Release Candidate  
+**Status:** Accepted Foundation Release  
 **Frozen:** 2026-07-24  
 **Scope:** 125 Foundation assets
 
 ## Candidate decision
 
-MKS v0.6 RC1 is the first bounded Meridian Arc release candidate. It freezes
-the validated Foundation behind ten acceptance gates and separates release
-requirements from post-release ambition.
+MKS v0.6 RC1 passed every acceptance criterion and was accepted as the MKS v0.6
+Foundation Release. It freezes the validated Foundation behind ten acceptance
+gates and separates release requirements from post-release ambition.
 
 ## Included
 
@@ -39,6 +39,5 @@ requirements from post-release ambition.
 
 ## Acceptance rule
 
-RC1 may become v0.6 only after final review accepts every visible criterion.
-Any failed criterion must identify the evidence and produce RC2; new ideas do
-not reopen RC1 scope.
+RC1 passed final review and became v0.6 on 2026-07-24. New ideas do not reopen
+the released scope; they enter a later version.
