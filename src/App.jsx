@@ -1031,7 +1031,11 @@ function StudioPage() {
   const [audience, setAudience] = useState("Builders and stewards");
   const [drafts, setDrafts] = useState(() => {
     if (typeof window === "undefined") return [];
-    try { return JSON.parse(window.localStorage.getItem("meridian-studio")) || []; } catch { return []; }
+    try {
+      return (JSON.parse(window.localStorage.getItem("meridian-studio")) || []).map((item) => ({
+        status: "Draft", revision: 1, reviewer: "", evidence: "", released: "", ...item
+      }));
+    } catch { return []; }
   });
   const [notice, setNotice] = useState("");
   const source = getObject(sourceId) || eligible[0];
@@ -1048,8 +1052,29 @@ function StudioPage() {
   ].join("\n") : "";
   const saveDraft = () => {
     const id = `PUB-${String(Math.max(0, ...drafts.map((item) => Number(item.id.replace(/\D/g, "")))) + 1).padStart(3, "0")}`;
-    persist([{ id, sourceId, format, audience, title: output.title, created: new Date().toISOString().slice(0, 10), text: plainText }, ...drafts]);
+    persist([{ id, sourceId, format, audience, title: output.title, created: new Date().toISOString().slice(0, 10), text: plainText, status: "Draft", revision: 1, reviewer: "", evidence: "", released: "" }, ...drafts]);
     setNotice(`${id} saved in this browser.`);
+  };
+  const updatePublication = (id, changes) => persist(drafts.map((item) => item.id === id ? { ...item, ...changes } : item));
+  const advancePublication = (item, nextStatus) => {
+    if (["Accepted", "Released"].includes(nextStatus) && (!item.reviewer?.trim() || !item.evidence?.trim())) {
+      setNotice("Reviewer and review evidence are required before acceptance or release.");
+      return;
+    }
+    const changes = { status: nextStatus };
+    if (nextStatus === "Revised") changes.revision = (item.revision || 1) + 1;
+    if (nextStatus === "Released") changes.released = new Date().toISOString().slice(0, 10);
+    updatePublication(item.id, changes);
+    setNotice(`${item.id} moved to ${nextStatus}.`);
+  };
+  const downloadPublication = (item) => {
+    const releaseHeader = `${item.id} · Revision ${item.revision || 1} · ${item.status}${item.released ? ` · Released ${item.released}` : ""}\nReviewer: ${item.reviewer || "Not assigned"}\nReview evidence: ${item.evidence || "Not recorded"}\n\n`;
+    const blob = new Blob([releaseHeader, item.text], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${item.id}-r${item.revision || 1}-${item.status.toLowerCase()}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
   };
   const copyOutput = async () => {
     try { await navigator.clipboard.writeText(plainText); setNotice("Publication copied."); }
@@ -1092,10 +1117,27 @@ function StudioPage() {
           {output.sections.map(([heading, body], index) => <section key={heading}><span>0{index + 1}</span><div><p className="kicker">{heading}</p><p>{body}</p></div></section>)}
           <footer><span>Source of truth: Meridian Knowledge Specification v{source.version}</span><span>Compiled for {audience || "Meridian practitioners"}</span></footer>
         </div>
-        <section className="studio-drafts"><div><p className="kicker">Saved publications</p><strong>{drafts.length}</strong></div>{drafts.length ? drafts.slice(0, 5).map((item) => <article key={item.id}><span>{item.id}</span><div><b>{item.title}</b><p>{item.sourceId} · {item.format} · {item.created}</p></div><button onClick={() => persist(drafts.filter((draft) => draft.id !== item.id))}>Remove</button></article>) : <p>No drafts yet. Compile the first reusable translation.</p>}</section>
+        <section className="publication-registry">
+          <header><div><p className="kicker">Governed publication registry</p><h2>From draft to durable release</h2></div><div className="registry-metrics"><span><b>{drafts.length}</b>Total</span><span><b>{drafts.filter((item) => item.status === "Review").length}</b>In review</span><span><b>{drafts.filter((item) => item.status === "Released").length}</b>Released</span></div></header>
+          {drafts.length ? drafts.map((item) => <article className={`registry-card state-${item.status.toLowerCase()}`} key={item.id}>
+            <div className="registry-title"><span>{item.id} · R{item.revision || 1}</span><b>{item.status}</b><h3>{item.title}</h3><p>{item.sourceId} · {item.format} · {item.audience} · Created {item.created}</p></div>
+            <div className="registry-review">
+              <label><span>Accountable reviewer</span><input value={item.reviewer || ""} onChange={(event) => updatePublication(item.id, { reviewer: event.target.value })} placeholder="Name the person who examined it" /></label>
+              <label><span>Review evidence</span><textarea rows="3" value={item.evidence || ""} onChange={(event) => updatePublication(item.id, { evidence: event.target.value })} placeholder="What was checked, challenged, corrected, or accepted?" /></label>
+            </div>
+            <div className="registry-actions">
+              {["Draft", "Revised"].includes(item.status) && <button onClick={() => advancePublication(item, "Review")}>Submit for review</button>}
+              {item.status === "Review" && <><button onClick={() => advancePublication(item, "Accepted")}>Accept</button><button onClick={() => advancePublication(item, "Revised")}>Return for revision</button></>}
+              {item.status === "Accepted" && <button onClick={() => advancePublication(item, "Released")}>Release publication</button>}
+              <button onClick={() => downloadPublication(item)}>Download record</button>
+              {item.status !== "Released" && <button className="registry-remove" onClick={() => persist(drafts.filter((draft) => draft.id !== item.id))}>Remove</button>}
+            </div>
+            {item.released && <p className="release-stamp">Released {item.released} · Source {item.sourceId} · Revision {item.revision || 1} · Evidence retained</p>}
+          </article>) : <div className="registry-empty"><h3>No publications registered.</h3><p>Compile and save a Studio output to begin the governed release path.</p></div>}
+        </section>
       </div>
     </section>
-    <section className="studio-standard section"><p className="kicker">Compiler rule</p><h2>Change the form for the audience. Never hide a change to the source.</h2></section>
+    <section className="studio-standard section"><p className="kicker">Publication rule</p><h2>A translation becomes a release only after its source, reviewer, evidence, and revision remain visible.</h2></section>
   </main>;
 }
 
