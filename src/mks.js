@@ -213,6 +213,9 @@ const operationalSpecs = {
       ["Authorize navigation", "Move only when orientation is sufficient for the risk involved."]
     ],
     checks: ["What do we know directly?", "Which assumption would most change the route?", "Is our confidence appropriate to the consequence?"],
+    worksheet: [["Position", "Where does the situation stand now?", "text"], ["Evidence", "What directly supports that position?", "text"], ["Assumptions", "What is believed but not yet verified?", "text"], ["References", "Which stable signals establish position?", "text"], ["Confidence", "How sufficient is orientation for the consequence?", "scale"], ["Next question", "What would most improve orientation?", "text"]],
+    interpretation: ["1–2: orient further before consequential movement", "3: proceed only with reversible steps", "4–5: sufficiently oriented for the stated risk"],
+    workedExample: "Before selecting the next MKS build, the team counts operational objects, identifies the seven incomplete frameworks, and chooses that visible gap instead of inventing another category.",
     genEvidence: "A completed orientation brief counts when its evidence, assumptions, and next question are reviewable."
   },
   "F-002": {
@@ -226,6 +229,9 @@ const operationalSpecs = {
       ["Commit and review", "Choose, record why, and define what evidence could reopen it."]
     ],
     checks: ["Does this serve the stated purpose?", "Who inherits the consequence?", "What future attention does this choice create or remove?"],
+    worksheet: [["Choice", "What real decision must be made?", "text"], ["Purpose", "What must the decision protect or create?", "text"], ["Options", "What viable choices exist, including waiting?", "text"], ["Consequences", "Who inherits immediate and delayed effects?", "text"], ["Time", "What future attention does each option create or remove?", "text"], ["Decision", "What is chosen, why, and when will it be reviewed?", "text"]],
+    interpretation: ["A complete decision preserves purpose, tradeoff, consequence, owner, and review condition."],
+    workedExample: "The public site is kept on GitHub Pages for family access while the owner-only Sites deployment remains a controlled working checkpoint.",
     genEvidence: "A decision counts as completed work when the choice, rationale, owner, and review condition are recorded."
   },
   "F-005": {
@@ -239,6 +245,9 @@ const operationalSpecs = {
       ["Release and steward", "Initiate, observe, and intervene only where evidence requires it."]
     ],
     checks: ["What exactly receives the transferred energy?", "How will we know the reaction is carrying itself?", "What condition requires intervention or shutdown?"],
+    worksheet: [["Desired reaction", "What useful motion should continue after initiation?", "text"], ["Receiver", "What person or system must move second?", "text"], ["Candidate catalyst", "What minimum sufficient action could reach it?", "text"], ["Transfer signal", "What observable event proves energy moved?", "text"], ["Stop boundary", "What condition requires correction or shutdown?", "text"], ["Stewardship", "Who watches the reaction and what do they record?", "text"]],
+    interpretation: ["The smallest action is not the catalyst unless it reaches the receiver.", "Scale only after the first transfer is observable."],
+    workedExample: "Publishing one usable framework canvas is a stronger catalyst than drafting an entire academy because a real user can complete it and reveal what teaching is needed next.",
     genEvidence: "GEN is completed when the catalyst and its measured reaction are delivered in a reviewable form."
   },
   "M-001": {
@@ -284,6 +293,121 @@ const operationalSpecs = {
     ],
     checks: ["Are the compared scopes similar?", "Was review time included?", "Could a higher number be hiding lower quality or transferred cost?"],
     genEvidence: "Preserve the numerator, denominator, scope, and date so the calculation can be reviewed."
+  }
+};
+
+const frameworkSpecs = {
+  "F-003": {
+    status: "Foundation",
+    purpose: "Expose how observations become interpretations, options, and action so hidden assumptions can be examined.",
+    rationale: "People often disagree at the conclusion while the real divergence occurred several reasoning steps earlier.",
+    validity: "Use when a question is consequential, reasoning is contested, or an action rests on assumptions that have not been made visible.",
+    applications: ["Reasoning review", "Facilitation", "Knowledge transfer"],
+    relationships: ["L-003", "I-005", "F-004"],
+    inputs: ["A consequential question", "Observable evidence", "Current interpretations", "Candidate actions"],
+    outputs: ["A visible reasoning path", "Named assumptions", "An evidence-linked next action"],
+    steps: [["State the question", "Write one decision-shaped question without embedding the preferred answer."], ["Separate observation from interpretation", "Record what is directly known before explaining what it means."], ["Map the branches", "Show alternate interpretations and the assumptions that produce each one."], ["Connect options to consequences", "Make the path from interpretation to action visible."], ["Choose a learning path", "Select the action that serves purpose while producing useful evidence."]],
+    checks: ["Where does the first unsupported assumption enter?", "What alternate path fits the same observations?", "Can another person reconstruct why the action follows?"],
+    worksheet: [["Starting question", "What consequential question are you trying to answer?", "text"], ["Observations", "What is directly known or observed?", "text"], ["Assumptions", "What are you adding that has not been verified?", "text"], ["Alternative path", "What other interpretation fits the observations?", "text"], ["Chosen action", "What will you do, and why does it follow?", "text"], ["Learning signal", "What evidence would change this pathway?", "text"]],
+    interpretation: ["A strong pathway keeps facts, assumptions, interpretations, and choices distinguishable.", "If no evidence could change the path, it is a commitment—not an inquiry."],
+    workedExample: "A low signup rate is mapped as an observation. Instead of assuming weak demand, the team records alternate paths—unclear promise, excessive friction, or wrong audience—and tests the smallest distinguishing signal.",
+    genEvidence: "The completed pathway counts when another person can inspect its evidence, assumptions, alternatives, selected action, and learning signal."
+  },
+  "F-004": {
+    status: "Foundation",
+    purpose: "Recognize choices that materially alter future routes and give them attention proportional to consequence.",
+    rationale: "Not every decision is a junction. Treating routine choices as strategic wastes judgment; overlooking true junctions creates hidden lock-in.",
+    validity: "Use when options create meaningfully different downstream states, especially where reversibility, timing, or inherited consequences differ.",
+    applications: ["Strategy", "Architecture", "Governance"],
+    relationships: ["F-002", "F-003", "I-005"],
+    inputs: ["A decision point", "Viable branches", "Reversibility and timing", "Downstream consequences"],
+    outputs: ["A junction record", "A branch comparison", "A decision and revisit trigger"],
+    steps: [["Test for a junction", "Ask whether the choice changes the future route, not merely the next task."], ["Name viable branches", "Include delay or no action when either is real."], ["Map inheritance", "Identify what each branch gives to—or imposes on—the next steward."], ["Assess reversibility", "Separate reversible experiments from commitments that narrow future choice."], ["Choose and mark the junction", "Record the branch, rejected alternatives, and evidence that could justify returning."]],
+    checks: ["Does this choice materially alter downstream options?", "Which branch creates the most difficult-to-reverse consequence?", "Who inherits the selected route?"],
+    worksheet: [["Junction", "What choice may change the route?", "text"], ["Branches", "What viable paths exist, including waiting?", "text"], ["Inheritance", "What does each branch give to the future?", "text"], ["Reversibility", "Which consequences can and cannot be undone?", "text"], ["Decision rule", "What principle or evidence decides the branch?", "text"], ["Revisit trigger", "What signal would reopen this junction?", "text"]],
+    interpretation: ["High-consequence, low-reversibility junctions require deeper orientation.", "A reversible branch can be used to learn before committing the full route."],
+    workedExample: "Choosing a permanent publishing platform is treated as a junction because URLs, access, and workflows will inherit the choice; a visual color tweak is not.",
+    genEvidence: "A junction becomes reviewable GEN when branches, inherited consequences, reversibility, decision, and revisit trigger are recorded."
+  },
+  "F-006": {
+    status: "Foundation",
+    purpose: "Design one investment of effort to create capability that can be reused, transferred, and improved.",
+    rationale: "Output ends with completion; a multiplier changes what future people or systems can accomplish.",
+    validity: "Use where repetition, transfer, or scale is expected. Do not claim multiplication when hidden maintenance or correction costs exceed the capability created.",
+    applications: ["Automation", "Education", "Reusable systems"],
+    relationships: ["L-004", "L-005", "G-001"],
+    inputs: ["A repeated need", "A seed capability", "Intended recipients", "Maintenance and decay risks"],
+    outputs: ["A multiplier hypothesis", "A transfer mechanism", "A reuse and maintenance test"],
+    steps: [["Name the repeated need", "Identify work or judgment that must occur more than once."], ["Define the seed capability", "State what one investment will make possible."], ["Design transfer", "Specify how another person or system receives and applies it."], ["Test independent reuse", "Observe use without the creator rescuing the result."], ["Measure net multiplication", "Compare repeated capability with maintenance, correction, and transferred burden."]],
+    checks: ["What can the recipient do afterward?", "Can the capability survive without its creator present?", "Is cost conserved or merely displaced?"],
+    worksheet: [["Repeated need", "What keeps requiring human effort or expertise?", "text"], ["Seed capability", "What one investment could become reusable?", "text"], ["Recipients", "Who or what should gain capability?", "text"], ["Transfer mechanism", "How will capability reach and guide them?", "text"], ["Decay risk", "What will make the multiplier weaken or become wrong?", "text"], ["Multiplier evidence", "What independent reuse will prove multiplication?", "text"]],
+    interpretation: ["A multiplier is demonstrated by independent, repeated use—not projected reach.", "Maintenance belongs in the multiplier calculation."],
+    workedExample: "A diagnostic playbook becomes a multiplier only after another technician uses it successfully, records a correction, and no longer needs the author for every case.",
+    genEvidence: "Count the reusable artifact and demonstrated independent use; record maintenance and correction costs beside the capability claim."
+  },
+  "F-007": {
+    status: "Foundation",
+    purpose: "Convert the difference between intention and reality into a deliberate change in the next cycle.",
+    rationale: "Experience alone does not compound. Learning occurs when evidence changes understanding, action, or the system.",
+    validity: "Use after meaningful action or reaction. Reflection must not delay urgent correction when safety or integrity boundaries are crossed.",
+    applications: ["After-action review", "Iteration", "Personal practice"],
+    relationships: ["L-011", "M-001", "I-005"],
+    inputs: ["Original intent", "Action taken", "Observed reaction", "A responsible next steward"],
+    outputs: ["A discrepancy statement", "A retained lesson", "A changed next action"],
+    steps: [["Recover intent", "State what the action was meant to cause."], ["Record the reaction", "Describe what actually happened without cleaning the story."], ["Find the discrepancy", "Locate meaningful differences between expectation and reality."], ["Extract the lesson", "Name what the discrepancy changes in understanding."], ["Close the loop", "Assign a concrete change to the next action, system, or map."]],
+    checks: ["What did reality reveal that planning could not?", "What belief or capability changed?", "Where will the lesson alter future behavior?"],
+    worksheet: [["Intent", "What did you expect the action to cause?", "text"], ["Action", "What was actually done?", "text"], ["Reaction", "What did reality do in response?", "text"], ["Discrepancy", "Where did expectation and outcome differ?", "text"], ["Lesson", "What must now change in understanding?", "text"], ["Next cycle", "What specific action or system will inherit the lesson?", "text"]],
+    interpretation: ["A reflection is incomplete until a future action or system inherits the learning.", "Unexpected success deserves the same examination as failure."],
+    workedExample: "A public knowledge page attracts visits but no reuse. The lesson changes the next cycle from publishing more prose to adding a runnable worksheet and an observable completion signal.",
+    genEvidence: "Reflection counts when evidence, discrepancy, lesson, and the changed next action are preserved together."
+  },
+  "F-008": {
+    status: "Foundation",
+    purpose: "Identify the unknown whose resolution would most improve orientation or change action.",
+    rationale: "Discovery is not collecting more information. It is reducing the uncertainty that materially shapes the route.",
+    validity: "Use before prescribing solutions in unfamiliar, ambiguous, or disputed conditions.",
+    applications: ["Research", "Product discovery", "Diagnosis"],
+    relationships: ["F-001", "I-002", "M-001"],
+    inputs: ["Current knowledge", "Assumptions", "Meaningful unknowns", "Decision consequence"],
+    outputs: ["A discovery question", "A cheapest credible evidence plan", "A stop condition"],
+    steps: [["Inventory knowledge", "Separate known, assumed, and unknown."], ["Rank unknowns", "Ask which uncertainty would most change the route."], ["Form a discovery question", "Make the unknown answerable through observable evidence."], ["Choose the cheapest credible sighting", "Select an ethical test sufficient to improve orientation."], ["Stop and update", "End discovery when evidence is sufficient for the risk, then revise the map."]],
+    checks: ["Would the answer change action?", "Is this evidence credible enough for the consequence?", "Are we discovering—or postponing commitment?"],
+    worksheet: [["Known", "What is supported by direct evidence?", "text"], ["Assumed", "What is presently believed but unverified?", "text"], ["Unknown", "Which uncertainties could matter?", "text"], ["Leverage unknown", "Which answer would most change the route?", "text"], ["Evidence plan", "What is the cheapest credible way to learn?", "text"], ["Stop condition", "When is orientation sufficient to act?", "text"]],
+    interpretation: ["The highest-leverage unknown, not the easiest question, leads discovery.", "A stop condition prevents research from becoming avoidance."],
+    workedExample: "Before building a full course, Meridian tests whether a new reader can independently use one framework canvas and describe the capability gained.",
+    genEvidence: "The discovery artifact counts when the question, evidence plan, findings, and resulting orientation change are reviewable."
+  },
+  "F-009": {
+    status: "Foundation",
+    purpose: "Hold long-range direction without pretending that distant terrain can be planned in detail.",
+    rationale: "False precision creates brittle plans; direction without near commitment creates drift.",
+    validity: "Use when the work must move now while future conditions remain materially uncertain.",
+    applications: ["Roadmapping", "Strategy", "Long-range stewardship"],
+    relationships: ["I-003", "L-006", "F-007"],
+    inputs: ["Long-range direction", "Present visibility", "Near commitments", "Horizon-changing signals"],
+    outputs: ["A near planning horizon", "A far directional horizon", "An extension trigger"],
+    steps: [["State enduring direction", "Name the capability or condition pursued beyond the current plan."], ["Mark current visibility", "Define what evidence allows the route to be planned now."], ["Commit the near horizon", "Choose concrete deliverables within visible terrain."], ["Protect the far horizon from false detail", "Keep distant work directional and revisable."], ["Advance on signal", "Extend or alter the plan only when named evidence arrives."]],
+    checks: ["What can be responsibly committed now?", "Which detail is invented rather than observed?", "What signal moves the horizon?"],
+    worksheet: [["Direction", "What enduring future capability guides the work?", "text"], ["Visible terrain", "What can be responsibly understood now?", "text"], ["Near horizon", "What concrete commitment belongs in this cycle?", "text"], ["Far horizon", "What remains direction rather than plan?", "text"], ["Signals", "What evidence will extend or redirect the route?", "text"]],
+    interpretation: ["Near work should be specific; distant work should preserve intent without false certainty.", "The Horizon framework defines the reasoning; I-003 records the reading."],
+    workedExample: "The MKS commits to operational frameworks now while treating certification as a far horizon until practical use reveals what competency actually requires.",
+    genEvidence: "A Horizon record counts when direction, current commitment, withheld detail, and the signal for extension are explicit."
+  },
+  "F-010": {
+    status: "Foundation",
+    purpose: "Assess whether a system transfers value, learns, recovers, and continues under accountable stewardship.",
+    rationale: "A system can appear productive while hiding dependence, fragility, delayed harm, or an inability to learn.",
+    validity: "Use as a directional health assessment with observable evidence. Scores are prompts for inquiry, not objective truth.",
+    applications: ["System review", "Governance", "Operational resilience"],
+    relationships: ["L-002", "L-005", "I-004"],
+    inputs: ["A bounded system", "Evidence of transfer and outcomes", "Failure and recovery history", "Stewardship ownership"],
+    outputs: ["A five-dimension health profile", "A weakest-dimension diagnosis", "A bounded intervention"],
+    steps: [["Bound the system", "Name its purpose, participants, and the period under review."], ["Score five dimensions", "Assess transfer, feedback, resilience, independence, and stewardship from evidence."], ["Find the weakest dimension", "Treat the low reading as the first diagnostic question."], ["Trace the cause", "Locate the condition producing weakness rather than labeling people."], ["Apply and review one catalyst", "Change a bounded condition and watch the next health reading."]],
+    checks: ["What observable evidence supports each score?", "Which weakness threatens purpose most?", "Who owns correction and the next review?"],
+    worksheet: [["System boundary", "What system, purpose, participants, and time period are being reviewed?", "text"], ["Transfer", "Does useful value reach the next participant?", "scale"], ["Feedback", "Can reality change how the system operates?", "scale"], ["Resilience", "Can the system recover from disruption?", "scale"], ["Independence", "Can it continue without avoidable creator rescue?", "scale"], ["Stewardship", "Are consequences owned, observed, and corrected?", "scale"], ["First intervention", "What bounded condition will be changed first?", "text"]],
+    interpretation: ["1–2: material weakness—investigate before scaling", "3: functioning but fragile or unclear", "4–5: healthy enough for current purpose; continue observation"],
+    workedExample: "A founder-led service scores transfer 4, feedback 4, resilience 2, independence 1, and stewardship 3. The first intervention is a documented escalation path tested during a planned founder absence.",
+    genEvidence: "The health assessment counts when every score cites evidence and the weakest dimension produces an owned, reviewable intervention."
   }
 };
 
@@ -446,15 +570,15 @@ const instrumentSpecs = {
 
 export const mksObjects = rawObjects.map((item) => ({
   ...item,
-  maturity: (operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
-  ...(operationalSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id] || {})
+  maturity: (operationalSpecs[item.id] || frameworkSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id]) ? "Operational" : item.status === "Seed" ? "Registered" : "Specified",
+  ...(operationalSpecs[item.id] || frameworkSpecs[item.id] || lawSpecs[item.id] || patternSpecs[item.id] || instrumentSpecs[item.id] || {})
 }));
 
 export const roadmap = [
   { phase: "Built", count: 43, label: "Knowledge objects have permanent, searchable homes.", status: "Complete" },
-  { phase: "Operational", count: 36, label: "Core entries include steps, checks, inputs, outputs, and GEN evidence.", status: "Active" },
-  { phase: "Next", count: 7, label: "Remaining frameworks need full operating protocols.", status: "Queued" },
-  { phase: "Then", count: 27, label: "The glossary needs permanent, cross-linked definitions.", status: "Queued" }
+  { phase: "Operational", count: 43, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
+  { phase: "Next", count: 27, label: "The glossary needs permanent, cross-linked definitions.", status: "Active" },
+  { phase: "Then", count: 25, label: "Real applications and worked scenarios will test the system across domains.", status: "Queued" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
