@@ -280,7 +280,7 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
 .studio-output > header h2 { font-size: clamp(36px, 4vw, 58px); margin: 8px 0 12px; }
 .studio-output > header p:last-child { color: #82969a; }
 .studio-output > header > div:last-child { display: flex; gap: 8px; }
-.studio-output > header button, .studio-drafts button { border: 1px solid var(--line); background: transparent; color: var(--gold-light); padding: 10px 12px; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; cursor: pointer; white-space: nowrap; }
+.studio-output > header button { border: 1px solid var(--line); background: transparent; color: var(--gold-light); padding: 10px 12px; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; cursor: pointer; white-space: nowrap; }
 .publication-sheet { background: #e8e4d8; color: #10202a; padding: clamp(28px, 5vw, 70px); box-shadow: 0 25px 80px rgba(0,0,0,.18); }
 .publication-mark { display: flex; justify-content: space-between; border-bottom: 2px solid #a08049; padding-bottom: 18px; color: #78643e; font-size: 9px; letter-spacing: .18em; }
 .publication-sheet > section { display: grid; grid-template-columns: 45px 1fr; gap: 25px; padding: 30px 0; border-bottom: 1px solid rgba(16,32,42,.15); }
@@ -288,13 +288,30 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
 .publication-sheet > section .kicker { color: #7f6a43; }
 .publication-sheet > section p:last-child { color: #394b50; font: 500 clamp(17px, 1.7vw, 22px)/1.55 "Playfair Display"; }
 .publication-sheet > footer { display: flex; justify-content: space-between; gap: 30px; background: transparent; padding: 28px 0 0; color: #7c817c; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
-.studio-drafts { margin-top: 50px; border-top: 1px solid var(--line); }
-.studio-drafts > div { display: flex; justify-content: space-between; align-items: end; padding: 24px 0; }
-.studio-drafts > div strong { color: var(--gold-light); font: 500 35px "Playfair Display"; }
-.studio-drafts > article { display: grid; grid-template-columns: 65px 1fr auto; gap: 18px; align-items: center; padding: 18px 0; border-top: 1px solid var(--line); }
-.studio-drafts > article > span { color: var(--gold); font-size: 9px; }
-.studio-drafts > article b { color: var(--ivory); font: 500 18px "Playfair Display"; }
-.studio-drafts > article p, .studio-drafts > p { color: #687d82; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; }
+.publication-registry { margin-top: 70px; border-top: 1px solid var(--line); padding-top: 35px; }
+.publication-registry > header { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 28px; }
+.publication-registry > header h2 { font-size: clamp(32px, 3.4vw, 48px); }
+.registry-metrics { display: flex; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.registry-metrics span { background: #0b1a27; color: #6f858a; padding: 12px 16px; min-width: 75px; text-align: center; font-size: 7px; text-transform: uppercase; letter-spacing: .1em; }
+.registry-metrics b { display: block; color: var(--gold-light); font: 500 26px "Playfair Display"; }
+.registry-card { border: 1px solid var(--line); margin-top: 14px; background: #0a1824; }
+.registry-card.state-released { border-color: rgba(200,167,106,.5); box-shadow: inset 3px 0 var(--gold); }
+.registry-title { padding: 24px; display: grid; grid-template-columns: 1fr auto; gap: 8px 20px; border-bottom: 1px solid var(--line); }
+.registry-title > span { color: var(--gold); font-size: 8px; letter-spacing: .15em; }
+.registry-title > b { color: var(--gold-light); border: 1px solid rgba(200,167,106,.35); padding: 5px 8px; font-size: 7px; text-transform: uppercase; letter-spacing: .12em; }
+.registry-title h3 { grid-column: 1 / -1; color: var(--ivory); font-size: 25px; }
+.registry-title p { grid-column: 1 / -1; color: #71868b; font-size: 8px; text-transform: uppercase; letter-spacing: .08em; }
+.registry-review { display: grid; grid-template-columns: .4fr .6fr; gap: 1px; background: var(--line); }
+.registry-review label { background: #091722; padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+.registry-review label span { color: #7f9296; font-size: 7px; text-transform: uppercase; letter-spacing: .13em; }
+.registry-review input, .registry-review textarea { width: 100%; border: 1px solid var(--line); background: #07131f; color: var(--ivory); padding: 11px; font: 400 12px "Inter"; resize: vertical; }
+.registry-actions { padding: 15px 20px; display: flex; flex-wrap: wrap; gap: 7px; }
+.registry-actions button { border: 1px solid rgba(200,167,106,.4); background: transparent; color: var(--gold-light); padding: 9px 11px; font-size: 7px; text-transform: uppercase; letter-spacing: .1em; cursor: pointer; }
+.registry-actions .registry-remove { border-color: var(--line); color: #6f8185; margin-left: auto; }
+.release-stamp { margin: 0; padding: 13px 20px; background: rgba(200,167,106,.1); color: var(--gold-light); font-size: 8px; text-transform: uppercase; letter-spacing: .1em; }
+.registry-empty { border: 1px dashed var(--line); padding: 40px; text-align: center; }
+.registry-empty h3 { color: var(--ivory); font-size: 25px; }
+.registry-empty p { color: #71868b; }
 .studio-standard { text-align: center; background: #e8e4d8; color: #10202a; }
 .studio-standard h2 { max-width: 1100px; margin: 0 auto; }
 
@@ -968,8 +985,11 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .publication-sheet { padding: 30px 22px; }
   .publication-sheet > section { grid-template-columns: 32px 1fr; gap: 12px; }
   .publication-sheet > footer { flex-direction: column; }
-  .studio-drafts > article { grid-template-columns: 55px 1fr; }
-  .studio-drafts > article button { grid-column: 2; justify-self: start; }
+  .publication-registry > header { align-items: flex-start; flex-direction: column; }
+  .registry-metrics { width: 100%; }
+  .registry-metrics span { flex: 1; min-width: 0; }
+  .registry-review { grid-template-columns: 1fr; }
+  .registry-actions .registry-remove { margin-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
