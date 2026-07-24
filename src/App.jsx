@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { classifications, getGlossaryTerm, getObject, glossaryTerms, mksObjects, roadmap } from "./mks";
+import { applications, classifications, getApplication, getGlossaryTerm, getObject, glossaryTerms, mksObjects, roadmap } from "./mks";
 
 const laws = [
   ["01", "Orientation precedes navigation."],
@@ -40,6 +40,7 @@ function Header() {
   const links = [
     ["#/mks", "MKS Library"],
     ["#/glossary", "Glossary"],
+    ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
     ["#/laws", "Laws"],
     ["#/patterns", "Patterns"],
@@ -300,7 +301,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/glossary">Glossary</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a><a href="#metrics">Metrics</a>
+        <a href="#/mks">MKS Library</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -641,6 +642,68 @@ function GlossaryTermPage({ item }) {
   </main>;
 }
 
+function ApplicationsPage() {
+  const [query, setQuery] = useState("");
+  const [domain, setDomain] = useState("All");
+  const domains = ["All", ...Array.from(new Set(applications.map((item) => item.domain)))];
+  const results = applications.filter((item) => {
+    const text = `${item.id} ${item.title} ${item.domain} ${item.situation} ${item.diagnosis}`.toLowerCase();
+    return (domain === "All" || item.domain === domain) && text.includes(query.toLowerCase());
+  });
+  return <main className="applications-page">
+    <section className="applications-hero">
+      <div><p className="eyebrow"><span /> THE ATLAS · 25 WORKED APPLICATIONS</p><h1>Where principle<br /><em>meets consequence.</em></h1></div>
+      <p>Each application begins with a recognizable situation and follows the reaction through diagnosis, catalyst, evidence, risk, and completed GEN.</p>
+    </section>
+    <section className="application-tools">
+      <label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search situation, domain, or diagnosis…" aria-label="Search applications" /></label>
+      <div className="application-domains">{domains.map((value) => <button key={value} className={domain === value ? "active" : ""} onClick={() => setDomain(value)}>{value}<b>{value === "All" ? applications.length : applications.filter((item) => item.domain === value).length}</b></button>)}</div>
+      <p className="result-meta"><span>{results.length} applications shown</span><span>Eight domains · Worked foundation</span></p>
+    </section>
+    <section className="application-grid">
+      {results.map((item) => <a href={`#/applications/${item.id}`} key={item.id}>
+        <div><span>{item.id}</span><b>{item.domain}</b></div><h2>{item.title}</h2><p>{item.situation}</p>
+        <strong><span>First catalyst</span>{item.catalyst}</strong><em>Open application ↗</em>
+      </a>)}
+    </section>
+    {!results.length && <section className="empty-result"><h2>No application found.</h2><p>Try a broader phrase or remove the domain filter.</p></section>}
+  </main>;
+}
+
+function ApplicationPage({ item }) {
+  if (!item) return <main className="application-page"><section className="empty-result"><h1>Application not found.</h1><a href="#/applications">Return to applications</a></section></main>;
+  return <main className="application-page">
+    <div className="object-breadcrumb"><a href="#/applications">Applications</a><span>→</span><span>{item.id}</span></div>
+    <section className="application-masthead"><div><p className="kicker">{item.id} · {item.domain} · {item.status}</p><h1>{item.title}</h1></div><p>{item.situation}</p></section>
+    <section className="application-sequence">
+      <article><span>01</span><div><p className="kicker">Meridian diagnosis</p><h2>{item.diagnosis}</h2></div></article>
+      <article><span>02</span><div><p className="kicker">First catalyst</p><h2>{item.catalyst}</h2></div></article>
+      <article><span>03</span><div><p className="kicker">Expected reaction</p><h2>{item.reaction}</h2></div></article>
+    </section>
+    <section className="application-evidence">
+      <div><p className="kicker">Evidence to observe</p>{item.evidence.map((value) => <p key={value}><span>↗</span>{value}</p>)}</div>
+      <div><p className="kicker">Risk and boundary</p><p>{item.risks}</p></div>
+      <div><p className="kicker">GEN completion standard</p><p>{item.genStandard}</p></div>
+    </section>
+    <ApplicationWorkbench item={item} />
+    <section className="application-related"><p className="kicker">Specification behind this application</p><div>{item.relatedObjects.map((id) => { const related = getObject(id); return related ? <a href={`#/mks/${id}`} key={id}><span>{id}</span><b>{related.title}</b><em>↗</em></a> : null; })}</div></section>
+    <section className="next-object"><a href="#/applications">← Return to all applications</a></section>
+  </main>;
+}
+
+function ApplicationWorkbench({ item }) {
+  const fields = [["Observed situation", "What evidence shows this situation exists?"], ["System boundary", "What people, process, and period are included?"], ["Chosen catalyst", "Use the proposed catalyst or record a better bounded action."], ["Reaction signal", "What observable second action will prove transfer?"], ["Steward and review", "Who watches consequences, and when will they review?"]];
+  const initial = Object.fromEntries(fields.map(([label]) => [label, ""]));
+  const [answers, setAnswers] = useState(initial);
+  const completed = fields.filter(([label]) => answers[label].trim()).length;
+  return <section className="application-workbench">
+    <div><p className="kicker">Apply it to your situation</p><h2>Turn the worked case<br />into a bounded test.</h2><p>{completed} / {fields.length} evidence fields complete</p></div>
+    <div>{fields.map(([label, prompt]) => <label key={label}><span><b>{label}</b><small>{prompt}</small></span><textarea rows="3" value={answers[label]} onChange={(event) => setAnswers((current) => ({...current, [label]: event.target.value}))} placeholder="Record observable evidence…" /></label>)}</div>
+    <button onClick={() => setAnswers(initial)}>Clear application canvas</button>
+    <p className="local-note">This canvas stays in this browser session. Preserve a completed result in the system where the work is stewarded.</p>
+  </section>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -652,10 +715,13 @@ export default function App() {
   const path = route.slice(1).split("?")[0];
   const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
   const glossarySlug = path.match(/^\/glossary\/([^/]+)$/)?.[1];
+  const applicationId = path.match(/^\/applications\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (glossarySlug) return <><Header /><GlossaryTermPage item={getGlossaryTerm(decodeURIComponent(glossarySlug))} /><Footer /></>;
+  if (applicationId) return <><Header /><ApplicationPage item={getApplication(decodeURIComponent(applicationId))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
   if (path === "/glossary") return <><Header /><GlossaryPage /><Footer /></>;
+  if (path === "/applications") return <><Header /><ApplicationsPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
