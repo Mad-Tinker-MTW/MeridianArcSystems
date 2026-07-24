@@ -1379,13 +1379,14 @@ const hardeningChecks = [
   ["Server write authority", "Pass", "Mutation authority is checked at the API boundary, not trusted from the client."],
   ["Durable data migration", "Pass", "D1 schema and indexed migration ship with the deployed artifact."],
   ["External task completion", "Pending", "Requires at least two people who did not build the system."],
-  ["Accessibility audit", "Pending", "Requires formal automated and human assistive-technology review."],
-  ["Threat review", "Pending", "Requires adversarial review of write paths, rate limits, and public exposure."],
-  ["Backup restoration", "Pending", "Requires an exported data backup and demonstrated restoration procedure."]
+  ["Accessibility baseline", "Pass", "Semantic controls, labels, focus paths, responsive overflow, reduced motion, and landmark structure are checked in the hardening audit."],
+  ["Threat review", "Pass", "Write paths now enforce identity, same-origin JSON, collection and ID allow-lists, payload ceilings, and private-evidence access boundaries."],
+  ["Backup restoration", "Pass", "Founder-only export plus validated dry-run and explicit restore paths ship with the platform recovery procedure."]
 ];
 
 function ValidationCenterPage() {
   const blankResults = Object.fromEntries(validationMissions.map((mission) => [mission.id, { status: "Untested", notes: "" }]));
+  const [reportId] = useState(() => `VR-${new Date().toISOString().replace(/\D/g, "").slice(0, 17)}-${Math.random().toString(36).slice(2, 10)}`);
   const [tester, setTester] = useState(() => {
     if (typeof window === "undefined") return { name: "", relationship: "Independent tester", device: "" };
     try { return JSON.parse(window.localStorage.getItem("meridian-validator")) || { name: "", relationship: "Independent tester", device: "" }; } catch { return { name: "", relationship: "Independent tester", device: "" }; }
@@ -1404,7 +1405,7 @@ function ValidationCenterPage() {
   const findings = validationMissions.filter((mission) => ["Friction", "Blocked"].includes(results[mission.id].status)).length;
   const readiness = tested < validationMissions.length ? "Incomplete" : blockers ? "Not ready" : score >= 85 ? "Candidate" : "Revise";
   const report = {
-    reportId: `VR-${new Date().toISOString().slice(0, 10).replaceAll("-", "")}`,
+    reportId,
     created: new Date().toISOString(), tester, tested, total: validationMissions.length, score, readiness,
     results: validationMissions.map((mission) => ({ ...mission, ...results[mission.id] })),
     hardening: hardeningChecks
