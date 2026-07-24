@@ -700,8 +700,9 @@ export const roadmap = [
   { phase: "Platform", count: 5, label: "Evidence Graph, D1 records, role authority, governance administration, and five expanded methods operate as one milestone.", status: "Complete" },
   { phase: "Validation", count: 10, label: "All ten hardening gates are proven; eight missions carry evidence, with a 94/100 usability score and no blocked tasks.", status: "Complete" },
   { phase: "Remediation", count: 4, label: "Validation findings now drive clearer first-use instructions, plainer Academy language, stronger light-theme contrast, and visible release evidence.", status: "Complete" },
-  { phase: "Release Candidate", count: 1, label: "MKS v0.6 RC1 freezes 125 assets behind ten passed acceptance gates, a downloadable manifest, known limitations, and visible post-release work.", status: "Complete" },
-  { phase: "Next", count: 1, label: "Run the final acceptance review. Accept RC1 as v0.6, or record the exact failed criterion that requires RC2.", status: "Active" }
+  { phase: "Release Candidate", count: 1, label: "MKS v0.6 RC1 froze 125 assets behind ten passed acceptance gates, a downloadable manifest, known limitations, and visible post-release work.", status: "Complete" },
+  { phase: "Foundation Release", count: 1, label: "MKS v0.6 is accepted and released after RC1 passed every acceptance, consistency, hardening, build, and browser-verification gate.", status: "Complete" },
+  { phase: "Next", count: 1, label: "Begin post-release work without reopening v0.6: broaden field testing, define commercial offers, and expand evidence through new versioned releases.", status: "Active" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
