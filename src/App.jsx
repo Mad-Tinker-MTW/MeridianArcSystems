@@ -42,6 +42,7 @@ function Header() {
     ["#/academy", "Academy"],
     ["#/ledger", "GEN Ledger"],
     ["#/journal", "Journal"],
+    ["#/labs", "Labs"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -304,7 +305,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -902,6 +903,78 @@ function JournalPage() {
   </main>;
 }
 
+const seedExperiments = [
+  { id: "EXP-001", title: "Independent framework transfer", domain: "Academy", status: "Validated", hypothesis: "If a framework includes defined inputs, repeatable steps, checks, and an evidence canvas, a new user can apply it without the creator present.", boundary: "One unfamiliar user, one live decision, one 45-minute session.", catalyst: "Provide F-001 and its canvas without verbal instruction.", expected: "The user produces a bounded orientation brief and names the next useful action.", signals: "Completed evidence fields; assumptions separated from observations; user explains the next action.", safeguards: "Do not evaluate the person; evaluate whether the instrument transfers capability.", steward: "Academy steward", review: "2026-07-30", result: "The browser-tested paths now link instruction, exercise, mastery, and source objects. Independent human validation remains the next replication." },
+  { id: "EXP-002", title: "GEN acceptance gate", domain: "Measurement", status: "Running", hypothesis: "If only reviewed and accepted claims enter GEN and RoT totals, the metric will resist activity inflation.", boundary: "First ten GEN entries recorded by Meridian Arc.", catalyst: "Require evidence, reviewer, and Draft → Review → Accepted state.", expected: "Unreviewed work remains visible but excluded from completed totals.", signals: "Accepted-total accuracy; rejected or revised claims; reviewer disagreement; correction time.", safeguards: "GEN does not measure human worth; quality and harm can disqualify apparent output.", steward: "Measurement steward", review: "2026-08-07", result: "The operating ledger enforces the gate. Independent review behavior is still being observed." },
+  { id: "EXP-003", title: "Visible homes increase construction", domain: "Company", status: "Revised", hypothesis: "If every Meridian concept receives a visible home, construction will accelerate because dependencies become obvious.", boundary: "Foundation website releases v1–v14.", catalyst: "Publish each coherent capability directly into the working site.", expected: "The roadmap advances through tangible, linked assets rather than additional doctrine-only discussion.", signals: "Permanent assets; usable interactions; cross-links; completed releases; new gaps revealed.", safeguards: "Do not confuse page count with operational maturity.", steward: "Founder", review: "2026-07-24", result: "Construction accelerated, but asset count alone overstated maturity. The hypothesis was revised to require operational evidence, not merely a visible home." }
+];
+
+function LabsPage() {
+  const blank = { title: "", domain: "Knowledge", status: "Planned", hypothesis: "", boundary: "", catalyst: "", expected: "", signals: "", safeguards: "", steward: "", review: "", result: "" };
+  const [experiments, setExperiments] = useState(() => {
+    if (typeof window === "undefined") return seedExperiments;
+    try { return JSON.parse(window.localStorage.getItem("meridian-labs")) || seedExperiments; } catch { return seedExperiments; }
+  });
+  const [form, setForm] = useState(blank);
+  const [status, setStatus] = useState("All");
+  const visible = experiments.filter((item) => status === "All" || item.status === status);
+  const persist = (next) => {
+    setExperiments(next);
+    if (typeof window !== "undefined") window.localStorage.setItem("meridian-labs", JSON.stringify(next));
+  };
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const submit = (event) => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.hypothesis.trim() || !form.boundary.trim() || !form.catalyst.trim() || !form.signals.trim()) return;
+    const number = Math.max(0, ...experiments.map((item) => Number(item.id.replace(/\D/g, "")))) + 1;
+    persist([{ ...form, id: `EXP-${String(number).padStart(3, "0")}` }, ...experiments]);
+    setForm(blank);
+  };
+  const setExperimentStatus = (id, nextStatus) => persist(experiments.map((item) => item.id === id ? { ...item, status: nextStatus } : item));
+  const statuses = ["All", "Planned", "Running", "Validated", "Revised", "Rejected"];
+  return <main className="labs-page">
+    <section className="labs-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN LABS · REALITY TESTING</p><h1>Make the claim<br /><em>risk being wrong.</em></h1></div>
+      <p>A useful experiment does not prove the architect is right. It creates bounded conditions where reality can validate, revise, or reject the hypothesis without creating uncontrolled harm.</p>
+    </section>
+    <section className="labs-dashboard">
+      <article><span>Total experiments</span><strong>{experiments.length}</strong><p>Every claim remains inspectable</p></article>
+      <article><span>Currently running</span><strong>{experiments.filter((item) => item.status === "Running").length}</strong><p>Awaiting reaction evidence</p></article>
+      <article><span>Validated</span><strong>{experiments.filter((item) => item.status === "Validated").length}</strong><p>Within stated boundaries</p></article>
+      <article><span>Revised or rejected</span><strong>{experiments.filter((item) => item.status === "Revised" || item.status === "Rejected").length}</strong><p>Learning, not failure</p></article>
+    </section>
+    <section className="labs-workspace">
+      <div className="experiment-register">
+        <header><div><p className="kicker">Experiment register</p><h2>Claims in contact with reality</h2></div><div>{statuses.map((value) => <button key={value} className={status === value ? "active" : ""} onClick={() => setStatus(value)}>{value}<b>{value === "All" ? experiments.length : experiments.filter((item) => item.status === value).length}</b></button>)}</div></header>
+        {visible.map((item) => <article className="experiment-card" key={item.id}>
+          <div className="experiment-meta"><span>{item.id}</span><b>{item.domain}</b><select aria-label={`Status for ${item.title}`} value={item.status} onChange={(event) => setExperimentStatus(item.id, event.target.value)}>{statuses.slice(1).map((value) => <option key={value}>{value}</option>)}</select></div>
+          <h2>{item.title}</h2>
+          <section className="experiment-hypothesis"><p className="kicker">Hypothesis</p><p>{item.hypothesis}</p></section>
+          <div className="experiment-protocol">
+            <section><span>01</span><div><p className="kicker">Boundary</p><p>{item.boundary}</p></div></section>
+            <section><span>02</span><div><p className="kicker">Catalyst</p><p>{item.catalyst}</p></div></section>
+            <section><span>03</span><div><p className="kicker">Expected reaction</p><p>{item.expected || "Not yet specified."}</p></div></section>
+            <section><span>04</span><div><p className="kicker">Evidence signals</p><p>{item.signals}</p></div></section>
+          </div>
+          <div className="experiment-boundary"><article><p className="kicker">Safeguards</p><p>{item.safeguards || "No safeguards recorded."}</p></article><article><p className="kicker">Steward and review</p><p>{item.steward || "Unassigned"} · {item.review || "No date"}</p></article></div>
+          <div className="experiment-result"><p className="kicker">Current result</p><p>{item.result || "No reaction evidence has been recorded yet."}</p></div>
+        </article>)}
+      </div>
+      <form className="experiment-form" onSubmit={submit}>
+        <p className="kicker">Design an experiment</p><h2>What would change your mind?</h2>
+        <label><span>Experiment title</span><input required value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Name the claim being tested" /></label>
+        <div><label><span>Domain</span><select value={form.domain} onChange={(event) => update("domain", event.target.value)}><option>Knowledge</option><option>Academy</option><option>Measurement</option><option>Company</option><option>Technology</option><option>Human system</option></select></label><label><span>Initial state</span><select value={form.status} onChange={(event) => update("status", event.target.value)}>{statuses.slice(1).map((value) => <option key={value}>{value}</option>)}</select></label></div>
+        {[["hypothesis", "Hypothesis", "If we do X under Y conditions, then Z should become observable."], ["boundary", "Experiment boundary", "Who, what, where, and for how long?"], ["catalyst", "First catalyst", "What minimum sufficient action begins the test?"], ["expected", "Expected reaction", "What should happen if the hypothesis is useful?"], ["signals", "Evidence signals", "What observable evidence could validate, revise, or reject it?"], ["safeguards", "Safeguards", "How are people, time, data, and reversibility protected?"], ["result", "Current result", "What has reality shown so far?"]].map(([key, label, prompt]) => <label key={key}><span>{label}</span><textarea required={["hypothesis", "boundary", "catalyst", "signals"].includes(key)} rows="3" value={form[key]} onChange={(event) => update(key, event.target.value)} placeholder={prompt} /></label>)}
+        <div><label><span>Accountable steward</span><input value={form.steward} onChange={(event) => update("steward", event.target.value)} placeholder="Who owns observation?" /></label><label><span>Review date</span><input type="date" value={form.review} onChange={(event) => update("review", event.target.value)} /></label></div>
+        <button type="submit">Register experiment ↗</button>
+        <button type="button" className="experiment-reset" onClick={() => persist(seedExperiments)}>Restore foundation experiments</button>
+        <p className="local-note">Experiments remain in this browser. A status describes the hypothesis within its boundary, never an eternal truth.</p>
+      </form>
+    </section>
+    <section className="labs-standard section"><p className="kicker">Laboratory rule</p><h2>A test designed only to confirm the plan is not an experiment. It is a performance.</h2></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -925,6 +998,7 @@ export default function App() {
   if (path === "/academy") return <><Header /><AcademyPage /><Footer /></>;
   if (path === "/ledger") return <><Header /><GenLedgerPage /><Footer /></>;
   if (path === "/journal") return <><Header /><JournalPage /><Footer /></>;
+  if (path === "/labs") return <><Header /><LabsPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
