@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { applications, classifications, getApplication, getGlossaryTerm, getObject, glossaryTerms, mksObjects, roadmap } from "./mks";
+import { academyPaths, applications, classifications, getAcademyPath, getApplication, getGlossaryTerm, getObject, glossaryTerms, mksObjects, roadmap } from "./mks";
 
 const laws = [
   ["01", "Orientation precedes navigation."],
@@ -39,6 +39,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const links = [
     ["#/mks", "MKS Library"],
+    ["#/academy", "Academy"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -301,7 +302,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -704,6 +705,61 @@ function ApplicationWorkbench({ item }) {
   </section>;
 }
 
+function AcademyPage() {
+  const levels = ["All", ...Array.from(new Set(academyPaths.map((item) => item.level)))];
+  const [level, setLevel] = useState("All");
+  const paths = academyPaths.filter((item) => level === "All" || item.level === level);
+  return <main className="academy-page">
+    <section className="academy-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN ACADEMY · FOUNDATION</p><h1>Learn it by<br /><em>creating capability.</em></h1></div>
+      <p>Ten guided paths move from orientation to independent practice. Completion is not attendance. Every path ends with observable evidence another person can review.</p>
+    </section>
+    <section className="academy-map">
+      <div className="academy-levels">{levels.map((value) => <button key={value} className={level === value ? "active" : ""} onClick={() => setLevel(value)}>{value}<b>{value === "All" ? academyPaths.length : academyPaths.filter((item) => item.level === value).length}</b></button>)}</div>
+      <p className="result-meta"><span>{paths.length} learning paths shown</span><span>Guided practice · Evidence of mastery</span></p>
+      <div className="learning-path-grid">{paths.map((item, index) => <a href={`#/academy/${item.id}`} key={item.id}>
+        <div><span>{item.id}</span><b>{item.level}</b></div><strong>{String(index + 1).padStart(2, "0")}</strong><h2>{item.title}</h2><p>{item.outcome}</p>
+        <footer><span>{item.duration}</span><span>{item.lessons.length} guided lessons ↗</span></footer>
+      </a>)}</div>
+    </section>
+    <section className="academy-standard section"><p className="kicker">Academy standard</p><h2>If the learner cannot use it without the teacher, capability has not transferred.</h2></section>
+  </main>;
+}
+
+function AcademyPathPage({ item }) {
+  if (!item) return <main className="academy-path-page"><section className="empty-result"><h1>Learning path not found.</h1><a href="#/academy">Return to Academy</a></section></main>;
+  return <main className="academy-path-page">
+    <div className="object-breadcrumb"><a href="#/academy">Academy</a><span>→</span><span>{item.id}</span></div>
+    <section className="path-masthead"><div><p className="kicker">{item.id} · {item.level} · {item.duration}</p><h1>{item.title}</h1></div><div><p className="kicker">Capability outcome</p><p>{item.outcome}</p></div></section>
+    <section className="path-context">
+      <article><p className="kicker">Designed for</p><p>{item.audience}</p></article>
+      <article><p className="kicker">Prerequisites</p>{item.prerequisites.map((value) => <p key={value}>{value}</p>)}</article>
+    </section>
+    <section className="lesson-sequence">
+      <div className="protocol-heading"><p className="kicker">Guided sequence</p><h2>Four lessons.<br />One transferred capability.</h2></div>
+      {item.lessons.map(([title, action, objectId], index) => { const related = getObject(objectId); return <article key={title}><span>{String(index + 1).padStart(2, "0")}</span><div><p className="kicker">{objectId}{related ? ` · ${related.title}` : ""}</p><h2>{title}</h2><p>{action}</p></div><a href={`#/mks/${objectId}`}>Open source ↗</a></article>; })}
+    </section>
+    <section className="path-exercise"><p className="kicker">Practical exercise</p><h2>{item.exercise}</h2></section>
+    <AcademyProgress item={item} />
+    <section className="path-assessment">
+      <div><p className="kicker">Assessment prompts</p>{item.assessment.map((value, index) => <article key={value}><span>{String(index + 1).padStart(2, "0")}</span><p>{value}</p></article>)}</div>
+      <aside><p className="kicker">Related specification</p>{item.relatedObjects.map((id) => { const related = getObject(id); const application = getApplication(id); return related ? <a href={`#/mks/${id}`} key={id}><span>{id}</span><b>{related.title}</b></a> : application ? <a href={`#/applications/${id}`} key={id}><span>{id}</span><b>{application.title}</b></a> : null; })}</aside>
+    </section>
+    <section className="next-object"><a href="#/academy">← Return to all learning paths</a></section>
+  </main>;
+}
+
+function AcademyProgress({ item }) {
+  const [checked, setChecked] = useState(item.mastery.map(() => false));
+  const completed = checked.filter(Boolean).length;
+  const toggle = (index) => setChecked((current) => current.map((value, position) => position === index ? !value : value));
+  return <section className="academy-progress">
+    <div><p className="kicker">Evidence of mastery</p><h2>{completed} / {item.mastery.length} demonstrated</h2><p>Check an item only when evidence exists. This is a local self-audit, not certification.</p></div>
+    <div>{item.mastery.map((value, index) => <label key={value}><input type="checkbox" checked={checked[index]} onChange={() => toggle(index)} /><span><i>{checked[index] ? "✓" : String(index + 1).padStart(2, "0")}</i>{value}</span></label>)}</div>
+    <button onClick={() => setChecked(item.mastery.map(() => false))}>Reset mastery audit</button>
+  </section>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -716,12 +772,15 @@ export default function App() {
   const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
   const glossarySlug = path.match(/^\/glossary\/([^/]+)$/)?.[1];
   const applicationId = path.match(/^\/applications\/([^/]+)$/)?.[1];
+  const academyId = path.match(/^\/academy\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (glossarySlug) return <><Header /><GlossaryTermPage item={getGlossaryTerm(decodeURIComponent(glossarySlug))} /><Footer /></>;
   if (applicationId) return <><Header /><ApplicationPage item={getApplication(decodeURIComponent(applicationId))} /><Footer /></>;
+  if (academyId) return <><Header /><AcademyPathPage item={getAcademyPath(decodeURIComponent(academyId))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
   if (path === "/glossary") return <><Header /><GlossaryPage /><Footer /></>;
   if (path === "/applications") return <><Header /><ApplicationsPage /><Footer /></>;
+  if (path === "/academy") return <><Header /><AcademyPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
