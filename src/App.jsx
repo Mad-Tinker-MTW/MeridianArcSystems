@@ -43,6 +43,7 @@ function Header() {
     ["#/ledger", "GEN Ledger"],
     ["#/journal", "Journal"],
     ["#/labs", "Labs"],
+    ["#/studio", "Studio"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -305,7 +306,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -975,6 +976,129 @@ function LabsPage() {
   </main>;
 }
 
+const studioFormats = {
+  "Field Guide": {
+    label: "Practical guide",
+    build: (item, audience) => ({
+      title: `${item.title}: A Field Guide`,
+      deck: `A practical Meridian guide for ${audience.toLowerCase()} who need to turn ${item.classification.toLowerCase()} into observable action.`,
+      sections: [
+        ["The position", item.purpose],
+        ["The governing claim", item.statement],
+        ["Why it matters", item.rationale],
+        ["Use it when", item.validity],
+        ["First useful action", `Apply ${item.title} to one live situation. Record the present position, the smallest sufficient catalyst, and the evidence that would show a second action occurred.`],
+        ["Evidence of transfer", `A second person can explain the claim, use it in context, and identify where it should not be applied without the creator present.`]
+      ]
+    })
+  },
+  "Lesson": {
+    label: "Teaching asset",
+    build: (item, audience) => ({
+      title: `Teach ${item.title}`,
+      deck: `A 45-minute learning sequence that helps ${audience.toLowerCase()} understand, apply, and challenge ${item.id}.`,
+      sections: [
+        ["Learning outcome", `Use ${item.title} independently in one bounded situation and explain the evidence behind the choice.`],
+        ["Opening question", `Where are you currently moving without first testing the claim: “${item.statement}”?`],
+        ["Core idea", item.rationale],
+        ["Practice", `Choose one live situation. State the boundary, apply the claim, and record what changes in the proposed action.`],
+        ["Challenge", item.counterexamples?.[0] || "Name a condition where this guidance would be misleading or incomplete."],
+        ["Mastery evidence", `The learner can apply the object, state its validity conditions, and produce a reviewable next action without prompting.`]
+      ]
+    })
+  },
+  "Executive Brief": {
+    label: "Decision brief",
+    build: (item, audience) => ({
+      title: `${item.title} · Executive Brief`,
+      deck: `A concise decision brief for ${audience.toLowerCase()} evaluating whether ${item.id} should shape a live system.`,
+      sections: [
+        ["Decision claim", item.statement],
+        ["Strategic value", item.purpose],
+        ["Operating rationale", item.rationale],
+        ["Conditions", item.validity],
+        ["Recommended action", `Authorize one bounded application with an accountable steward, explicit evidence signals, and a scheduled review before wider adoption.`],
+        ["Risk and restraint", item.counterexamples?.[0] || "Do not scale the claim beyond the conditions supported by evidence."]
+      ]
+    })
+  }
+};
+
+function StudioPage() {
+  const eligible = mksObjects.filter((item) => item.statement && item.purpose);
+  const [sourceId, setSourceId] = useState(eligible[0]?.id || "");
+  const [format, setFormat] = useState("Field Guide");
+  const [audience, setAudience] = useState("Builders and stewards");
+  const [drafts, setDrafts] = useState(() => {
+    if (typeof window === "undefined") return [];
+    try { return JSON.parse(window.localStorage.getItem("meridian-studio")) || []; } catch { return []; }
+  });
+  const [notice, setNotice] = useState("");
+  const source = getObject(sourceId) || eligible[0];
+  const output = source ? studioFormats[format].build(source, audience || "Meridian practitioners") : null;
+  const persist = (next) => {
+    setDrafts(next);
+    if (typeof window !== "undefined") window.localStorage.setItem("meridian-studio", JSON.stringify(next));
+  };
+  const plainText = output ? [
+    output.title.toUpperCase(), output.deck, "",
+    `SOURCE: ${source.id} · ${source.classification} · MKS v${source.version}`,
+    ...output.sections.flatMap(([heading, body]) => ["", heading.toUpperCase(), body]),
+    "", "MERIDIAN ARC SYSTEMS", "Meaningful Automation for Society · Because Your Time Matters."
+  ].join("\n") : "";
+  const saveDraft = () => {
+    const id = `PUB-${String(Math.max(0, ...drafts.map((item) => Number(item.id.replace(/\D/g, "")))) + 1).padStart(3, "0")}`;
+    persist([{ id, sourceId, format, audience, title: output.title, created: new Date().toISOString().slice(0, 10), text: plainText }, ...drafts]);
+    setNotice(`${id} saved in this browser.`);
+  };
+  const copyOutput = async () => {
+    try { await navigator.clipboard.writeText(plainText); setNotice("Publication copied."); }
+    catch { setNotice("Copy was blocked by this browser. Download the text instead."); }
+  };
+  const downloadOutput = () => {
+    const blob = new Blob([plainText], { type: "text/plain;charset=utf-8" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `${source.id}-${format.toLowerCase().replace(/\s+/g, "-")}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+    setNotice("Publication downloaded.");
+  };
+  return <main className="studio-page">
+    <section className="studio-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN STUDIO · TRANSLATION ENGINE</p><h1>One source.<br /><em>Many useful forms.</em></h1></div>
+      <p>The specification remains the source of truth. Studio translates a selected knowledge object for a real audience without silently changing its claim, boundaries, or provenance.</p>
+    </section>
+    <section className="studio-flow">
+      <article><span>01</span><b>Select source</b><p>Choose a governed MKS object.</p></article>
+      <article><span>02</span><b>Set context</b><p>Name the audience and useful form.</p></article>
+      <article><span>03</span><b>Compile</b><p>Generate a traceable publication.</p></article>
+      <article><span>04</span><b>Review</b><p>Save, copy, or export the draft.</p></article>
+    </section>
+    <section className="studio-workspace">
+      <aside className="studio-controls">
+        <p className="kicker">Translation controls</p><h2>Compile from the Canon</h2>
+        <label><span>Source object</span><select value={sourceId} onChange={(event) => setSourceId(event.target.value)}>{eligible.map((item) => <option key={item.id} value={item.id}>{item.id} · {item.title}</option>)}</select></label>
+        <label><span>Publication form</span><select value={format} onChange={(event) => setFormat(event.target.value)}>{Object.keys(studioFormats).map((value) => <option key={value}>{value}</option>)}</select></label>
+        <label><span>Intended audience</span><input value={audience} onChange={(event) => setAudience(event.target.value)} placeholder="Who must use this?" /></label>
+        <div className="studio-source-card"><span>Source provenance</span><strong>{source.id}</strong><p>{source.classification} · {source.status} · MKS v{source.version}</p><a href={`#/mks/${source.id}`}>Inspect source object →</a></div>
+        <button onClick={saveDraft}>Save publication draft ↗</button>
+        <p className="local-note">{notice || "Drafts remain in this browser. Translation never overwrites the source object."}</p>
+      </aside>
+      <div className="studio-output">
+        <header><div><p className="kicker">{studioFormats[format].label} · Generated from {source.id}</p><h2>{output.title}</h2><p>{output.deck}</p></div><div><button onClick={copyOutput}>Copy</button><button onClick={downloadOutput}>Download .txt</button></div></header>
+        <div className="publication-sheet">
+          <div className="publication-mark"><span>MERIDIAN ARC</span><b>{source.id}</b></div>
+          {output.sections.map(([heading, body], index) => <section key={heading}><span>0{index + 1}</span><div><p className="kicker">{heading}</p><p>{body}</p></div></section>)}
+          <footer><span>Source of truth: Meridian Knowledge Specification v{source.version}</span><span>Compiled for {audience || "Meridian practitioners"}</span></footer>
+        </div>
+        <section className="studio-drafts"><div><p className="kicker">Saved publications</p><strong>{drafts.length}</strong></div>{drafts.length ? drafts.slice(0, 5).map((item) => <article key={item.id}><span>{item.id}</span><div><b>{item.title}</b><p>{item.sourceId} · {item.format} · {item.created}</p></div><button onClick={() => persist(drafts.filter((draft) => draft.id !== item.id))}>Remove</button></article>) : <p>No drafts yet. Compile the first reusable translation.</p>}</section>
+      </div>
+    </section>
+    <section className="studio-standard section"><p className="kicker">Compiler rule</p><h2>Change the form for the audience. Never hide a change to the source.</h2></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -999,6 +1123,7 @@ export default function App() {
   if (path === "/ledger") return <><Header /><GenLedgerPage /><Footer /></>;
   if (path === "/journal") return <><Header /><JournalPage /><Footer /></>;
   if (path === "/labs") return <><Header /><LabsPage /><Footer /></>;
+  if (path === "/studio") return <><Header /><StudioPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
