@@ -46,6 +46,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const links = [
     ["#/mks", "MKS Library"],
+    ["#/laws", "Laws"],
     ["#/roadmap", "Roadmap"],
     ["#specification", "Specification"],
     ["#frameworks", "Frameworks"],
@@ -307,7 +308,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
+        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -453,6 +454,35 @@ function RoadmapPage() {
   </main>;
 }
 
+function LawsPage() {
+  const lawObjects = mksObjects.filter((item) => item.classification === "Law");
+  return <main className="laws-page">
+    <section className="laws-page-hero">
+      <p className="eyebrow"><span /> TWELVE OPERATIONAL TESTS</p>
+      <h1>Laws meant to<br /><em>survive reality.</em></h1>
+      <p>These are not commandments and they do not ask for belief. Each law now states where it applies, where it can fail, and what evidence a steward must examine before using it.</p>
+    </section>
+    <section className="laws-page-grid">
+      {lawObjects.map((law, index) => <a href={`#/mks/${law.id}`} key={law.id}>
+        <div><span>{law.id}</span><Status>{law.status}</Status></div>
+        <strong>{String(index + 1).padStart(2, "0")}</strong>
+        <h2>{law.statement}</h2>
+        <p>{law.purpose}</p>
+        <div className="law-test"><span>FIRST TEST</span><b>{law.checks[0]}</b></div>
+      </a>)}
+    </section>
+    <section className="law-use-standard section">
+      <div><p className="kicker">The obligation</p><h2>Do not quote a law<br />without testing its boundary.</h2></div>
+      <div>
+        <p><span>01</span> State the situation before selecting the law.</p>
+        <p><span>02</span> Use observable evidence, not agreement, as support.</p>
+        <p><span>03</span> Record the condition under which the law may not apply.</p>
+        <p><span>04</span> Revisit the decision when reality changes.</p>
+      </div>
+    </section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState(typeof window === "undefined" ? "#/" : (window.location.hash || "#/"));
   useEffect(() => {
@@ -465,6 +495,7 @@ export default function App() {
   const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
+  if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/roadmap") return <><Header /><RoadmapPage /><Footer /></>;
   return <><Header /><main><Hero /><Origin /><Specification /><Reaction /><Frameworks /><Metrics /><Laws /><Homes /><Begin /></main><Footer /></>;
 }
