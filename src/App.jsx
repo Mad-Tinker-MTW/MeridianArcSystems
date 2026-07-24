@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { classifications, getObject, mksObjects, roadmap } from "./mks";
+import { classifications, getGlossaryTerm, getObject, glossaryTerms, mksObjects, roadmap } from "./mks";
 
 const laws = [
   ["01", "Orientation precedes navigation."],
@@ -39,6 +39,7 @@ function Header() {
   const [open, setOpen] = useState(false);
   const links = [
     ["#/mks", "MKS Library"],
+    ["#/glossary", "Glossary"],
     ["#/framework-library", "Frameworks"],
     ["#/laws", "Laws"],
     ["#/patterns", "Patterns"],
@@ -299,7 +300,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a><a href="#specification">Specification</a><a href="#frameworks">Frameworks</a><a href="#metrics">Metrics</a><a href="#labs">Labs</a><a href="#academy">Academy</a>
+        <a href="#/mks">MKS Library</a><a href="#/glossary">Glossary</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a><a href="#metrics">Metrics</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -584,6 +585,62 @@ function FrameworkLibraryPage() {
   </main>;
 }
 
+function GlossaryPage() {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("All");
+  const categories = ["All", ...Array.from(new Set(glossaryTerms.map((item) => item.category)))];
+  const results = glossaryTerms.filter((item) => {
+    const matchesCategory = category === "All" || item.category === category;
+    const haystack = `${item.term} ${item.category} ${item.definition} ${item.distinction}`.toLowerCase();
+    return matchesCategory && haystack.includes(query.toLowerCase());
+  });
+  return <main className="glossary-page">
+    <section className="glossary-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN LANGUAGE STANDARD</p><h1>Words that keep<br /><em>the system coherent.</em></h1></div>
+      <p>Twenty-seven permanent definitions establish what Meridian means—and what it does not mean—before the language is reused in software, teaching, or decisions.</p>
+    </section>
+    <section className="glossary-tools">
+      <label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search term, definition, or distinction…" aria-label="Search glossary" /></label>
+      <div className="glossary-filters">{categories.map((value) => <button key={value} className={category === value ? "active" : ""} onClick={() => setCategory(value)}>{value}<b>{value === "All" ? glossaryTerms.length : glossaryTerms.filter((item) => item.category === value).length}</b></button>)}</div>
+      <p className="result-meta"><span>{results.length} terms shown</span><span>MKS v0.5 · Foundation language</span></p>
+    </section>
+    <section className="glossary-grid">
+      {results.map((item, index) => <a href={`#/glossary/${item.slug}`} key={item.slug}>
+        <div><span>{String(index + 1).padStart(2, "0")}</span><b>{item.category}</b></div>
+        <h2>{item.term}</h2><p>{item.definition}</p><strong>Open definition ↗</strong>
+      </a>)}
+    </section>
+    {!results.length && <section className="empty-result"><h2>No term found.</h2><p>Try a broader word or remove the category filter.</p></section>}
+  </main>;
+}
+
+function GlossaryTermPage({ item }) {
+  if (!item) return <main className="glossary-term-page"><section className="empty-result"><h1>Glossary term not found.</h1><a href="#/glossary">Return to the glossary</a></section></main>;
+  return <main className="glossary-term-page">
+    <div className="object-breadcrumb"><a href="#/glossary">Glossary</a><span>→</span><span>{item.term}</span></div>
+    <section className="term-masthead"><p className="kicker">{item.category} · {item.status} · v{item.version}</p><h1>{item.term}</h1><p>{item.definition}</p></section>
+    <section className="term-body">
+      <div>
+        <article><p className="kicker">Critical distinction</p><h2>{item.distinction}</h2></article>
+        <article><p className="kicker">In practice</p><p>{item.example}</p></article>
+      </div>
+      <aside>
+        <p className="filter-title">Related terms</p>
+        {item.relatedTerms.map((slug) => {
+          const related = getGlossaryTerm(slug);
+          return <a href={`#/glossary/${slug}`} key={slug}><span>GLOSSARY</span><b>{related.term}</b></a>;
+        })}
+        <p className="filter-title object-links-title">Specification links</p>
+        {item.relatedObjects.map((id) => {
+          const related = getObject(id);
+          return related ? <a href={`#/mks/${id}`} key={id}><span>{id}</span><b>{related.title}</b></a> : null;
+        })}
+      </aside>
+    </section>
+    <section className="next-object"><a href="#/glossary">← Return to all glossary terms</a></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -594,8 +651,11 @@ export default function App() {
   }, []);
   const path = route.slice(1).split("?")[0];
   const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
+  const glossarySlug = path.match(/^\/glossary\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
+  if (glossarySlug) return <><Header /><GlossaryTermPage item={getGlossaryTerm(decodeURIComponent(glossarySlug))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
+  if (path === "/glossary") return <><Header /><GlossaryPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
