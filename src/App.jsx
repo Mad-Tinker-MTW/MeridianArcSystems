@@ -45,6 +45,7 @@ function Header() {
     ["#/labs", "Labs"],
     ["#/studio", "Studio"],
     ["#/releases", "Releases"],
+    ["#/platform", "Platform"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -307,7 +308,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/platform">Platform</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -1261,6 +1262,103 @@ function ReleasePage({ item }) {
   </main>;
 }
 
+const platformCapabilities = [
+  ["Evidence Graph", "Claims, methods, applications, experiments, and releases become traceable relationships instead of separate shelves."],
+  ["Durable Records", "Governance records persist in platform storage and can be retrieved across sessions and devices."],
+  ["Roles & Authority", "Founder, Steward, Reviewer, Learner, and Reader responsibilities are explicit and enforced at the write boundary."],
+  ["Governance Admin", "New proposals enter a visible Draft → Review → Accepted lifecycle with ownership and evidence."],
+  ["MKS Expansion", "Five new Foundation methods turn core doctrine into repeatable, reviewable protocols."]
+];
+
+function PlatformPage() {
+  const [active, setActive] = useState("Evidence Graph");
+  const [platform, setPlatform] = useState({ mode: "connecting", user: { role: "Reader", name: "Public reader" }, capabilities: ["read"], records: [] });
+  const [selected, setSelected] = useState("D-001");
+  const [notice, setNotice] = useState("");
+  const [proposal, setProposal] = useState({ title: "", classification: "Framework", claim: "", evidence: "", status: "Draft" });
+  const refresh = async () => {
+    try {
+      const response = await fetch("/api/platform?collection=governance");
+      if (!response.ok) throw new Error("Shared storage unavailable");
+      const data = await response.json();
+      setPlatform(data);
+    } catch {
+      let records = [];
+      try { records = JSON.parse(window.localStorage.getItem("meridian-governance")) || []; } catch { records = []; }
+      setPlatform({ mode: "device fallback", user: { role: "Reader", name: "Public reader" }, capabilities: ["read"], records });
+    }
+  };
+  useEffect(() => { refresh(); }, []);
+  const graphNodes = [
+    ...mksObjects.map((item) => ({ id: item.id, title: item.title, type: item.classification, links: item.relationships || [] })),
+    ...applications.slice(0, 8).map((item) => ({ id: item.id, title: item.title, type: "Application", links: item.relatedObjects || [] })),
+    ...foundationReleases.map((item) => ({ id: item.id, title: item.title, type: "Release", links: [item.sourceId] })),
+    ...seedExperiments.map((item) => ({ id: item.id, title: item.title, type: "Experiment", links: item.id === "EXP-001" ? ["F-001", "M-001"] : item.id === "EXP-002" ? ["G-001", "G-002"] : ["D-001", "F-006"] }))
+  ];
+  const currentNode = graphNodes.find((item) => item.id === selected) || graphNodes[0];
+  const outbound = currentNode.links.map((id) => graphNodes.find((item) => item.id === id)).filter(Boolean);
+  const inbound = graphNodes.filter((item) => item.links.includes(currentNode.id));
+  const saveProposal = async (event) => {
+    event.preventDefault();
+    if (!proposal.title.trim() || !proposal.claim.trim() || !proposal.evidence.trim()) return;
+    const id = `GOV-${String(platform.records.length + 1).padStart(3, "0")}`;
+    const record = { id, collection: "governance", payload: { ...proposal, steward: platform.user.name, created: new Date().toISOString().slice(0, 10) } };
+    try {
+      const response = await fetch("/api/platform", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id, collection: "governance", payload: record.payload }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Write rejected");
+      setNotice(`${id} saved to durable governance storage.`);
+      await refresh();
+    } catch (error) {
+      if (platform.user.role === "Reader") {
+        setNotice(error.message || "A steward identity is required to write shared records.");
+        return;
+      }
+      const next = [record, ...platform.records];
+      window.localStorage.setItem("meridian-governance", JSON.stringify(next));
+      setPlatform((value) => ({ ...value, mode: "device fallback", records: next }));
+      setNotice(`${id} saved on this device because shared storage was unavailable.`);
+    }
+    setProposal({ title: "", classification: "Framework", claim: "", evidence: "", status: "Draft" });
+  };
+  const methods = mksObjects.filter((item) => item.classification === "Method");
+  return <main className="platform-page">
+    <section className="platform-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN PLATFORM · FIVE-CAPABILITY MILESTONE</p><h1>The shelves<br /><em>become a system.</em></h1></div>
+      <p>This milestone connects knowledge, evidence, authority, durable records, and governance. Each capability strengthens the others instead of operating as a separate demonstration.</p>
+    </section>
+    <section className="platform-status">
+      <article><span>Platform mode</span><strong>{platform.mode}</strong><p>{platform.mode === "durable" ? "Shared records attached" : "Public read-only or device fallback"}</p></article>
+      <article><span>Current authority</span><strong>{platform.user.role}</strong><p>{platform.user.name}</p></article>
+      <article><span>Graph nodes</span><strong>{graphNodes.length}</strong><p>Knowledge and evidence objects</p></article>
+      <article><span>MKS objects</span><strong>{mksObjects.length}</strong><p>Expanded Foundation registry</p></article>
+      <article><span>Governance records</span><strong>{platform.records.length}</strong><p>Durable proposals and decisions</p></article>
+    </section>
+    <nav className="platform-tabs" aria-label="Platform capabilities">{platformCapabilities.map(([name]) => <button className={active === name ? "active" : ""} key={name} onClick={() => setActive(name)}>{name}</button>)}</nav>
+    <section className="platform-panel">
+      {active === "Evidence Graph" && <div className="evidence-graph">
+        <header><div><p className="kicker">Evidence Graph</p><h2>Follow the claim through the system</h2></div><label><span>Focus node</span><select value={selected} onChange={(event) => setSelected(event.target.value)}>{graphNodes.map((item) => <option key={item.id} value={item.id}>{item.id} · {item.title}</option>)}</select></label></header>
+        <div className="graph-focus"><span>{currentNode.type}</span><strong>{currentNode.id}</strong><h3>{currentNode.title}</h3></div>
+        <div className="graph-relations"><article><p className="kicker">Evidence feeding this node</p>{inbound.length ? inbound.map((item) => <button key={item.id} onClick={() => setSelected(item.id)}><span>{item.type}</span><b>{item.id}</b><p>{item.title}</p></button>) : <p>No inbound relationship is registered yet.</p>}</article><article><p className="kicker">Claims this node supports</p>{outbound.length ? outbound.map((item) => <button key={item.id} onClick={() => setSelected(item.id)}><span>{item.type}</span><b>{item.id}</b><p>{item.title}</p></button>) : <p>No outbound relationship is registered yet.</p>}</article></div>
+      </div>}
+      {active === "Durable Records" && <div className="durable-console"><p className="kicker">Durable shared state</p><h2>Memory beyond one browser</h2><p>The private Sites deployment writes governance records to D1. GitHub Pages remains a safe public reader and falls back to device-local state when its static host has no API.</p><div><article><span>Storage binding</span><strong>DB</strong><p>Structured D1 records</p></article><article><span>Collection</span><strong>governance</strong><p>Indexed and timestamped</p></article><article><span>Write authority</span><strong>Server</strong><p>Role checked before mutation</p></article></div><button onClick={refresh}>Refresh shared records</button></div>}
+      {active === "Roles & Authority" && <div className="role-matrix"><header><p className="kicker">Authority model</p><h2>Identity is not permission</h2><p>The server derives the current role from authenticated request headers and checks write authority again at the data boundary.</p></header>{[
+        ["Founder", "Doctrine, roles, acceptance, publication, deletion", "Full governance authority"],
+        ["Steward", "Create proposals, maintain evidence, conduct review", "Cannot publish or delete governance"],
+        ["Reviewer", "Challenge claims, record findings, recommend state", "Cannot rewrite source silently"],
+        ["Learner", "Complete paths, submit evidence, retain progress", "Own learning records only"],
+        ["Reader", "Inspect public knowledge and released publications", "No shared mutation authority"]
+      ].map(([role, scope, boundary]) => <article key={role}><strong>{role}</strong><p>{scope}</p><span>{boundary}</span></article>)}</div>}
+      {active === "Governance Admin" && <div className="governance-admin">
+        <form onSubmit={saveProposal}><p className="kicker">Administrative intake</p><h2>Register a governed proposal</h2><label><span>Proposal title</span><input required value={proposal.title} onChange={(event) => setProposal({ ...proposal, title: event.target.value })} /></label><div><label><span>Classification</span><select value={proposal.classification} onChange={(event) => setProposal({ ...proposal, classification: event.target.value })}>{classifications.slice(1).map((item) => <option key={item}>{item}</option>)}</select></label><label><span>Initial state</span><select value={proposal.status} onChange={(event) => setProposal({ ...proposal, status: event.target.value })}><option>Draft</option><option>Review</option></select></label></div><label><span>Proposed claim</span><textarea required rows="4" value={proposal.claim} onChange={(event) => setProposal({ ...proposal, claim: event.target.value })} /></label><label><span>Supporting evidence</span><textarea required rows="4" value={proposal.evidence} onChange={(event) => setProposal({ ...proposal, evidence: event.target.value })} /></label><button type="submit">Save governed proposal</button><p className="local-note">{notice || "Shared writes require steward authority. Public readers remain read-only."}</p></form>
+        <section><header><p className="kicker">Governance queue</p><strong>{platform.records.length}</strong></header>{platform.records.length ? platform.records.map((item) => <article key={item.id}><span>{item.id}</span><b>{item.payload.status}</b><h3>{item.payload.title}</h3><p>{item.payload.classification} · {item.payload.steward || item.owner_email}</p><blockquote>{item.payload.claim}</blockquote><small>{item.payload.evidence}</small></article>) : <div className="registry-empty"><h3>No proposals queued.</h3><p>The first authorized proposal will become the first durable governance record.</p></div>}</section>
+      </div>}
+      {active === "MKS Expansion" && <div className="method-expansion"><header><p className="kicker">Foundation v0.6 expansion</p><h2>Six methods now turn doctrine into operating practice</h2></header><div>{methods.map((item, index) => <a href={`#/mks/${item.id}`} key={item.id}><span>0{index + 1}</span><b>{item.id}</b><h3>{item.title}</h3><p>{item.statement}</p><em>Open method ↗</em></a>)}</div></div>}
+    </section>
+    <section className="platform-standard section"><p className="kicker">Platform rule</p><h2>A connected system is only stronger when its evidence, authority, and memory remain inspectable.</h2></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -1289,6 +1387,7 @@ export default function App() {
   if (path === "/labs") return <><Header /><LabsPage /><Footer /></>;
   if (path === "/studio") return <><Header /><StudioPage /><Footer /></>;
   if (path === "/releases") return <><Header /><ReleaseLibraryPage /><Footer /></>;
+  if (path === "/platform") return <><Header /><PlatformPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
