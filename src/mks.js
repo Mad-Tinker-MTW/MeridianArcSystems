@@ -686,7 +686,7 @@ export function getAcademyPath(id) {
 }
 
 export const roadmap = [
-  { phase: "Built", count: 123, label: "The knowledge system now includes evidence mapping, durable records, roles, administration, expanded methods, and reader releases.", status: "Complete" },
+  { phase: "Built", count: 124, label: "The knowledge system now includes evidence mapping, durable records, roles, administration, expanded methods, reader releases, and external validation.", status: "Complete" },
   { phase: "Operational", count: 48, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
   { phase: "Glossary", count: 27, label: "Core terms have definitions, distinctions, examples, and cross-links.", status: "Complete" },
   { phase: "Applications", count: 25, label: "Worked scenarios test Meridian across eight real-life domains.", status: "Complete" },
@@ -698,7 +698,8 @@ export const roadmap = [
   { phase: "Publication", count: 1, label: "Studio drafts now pass through accountable review, evidence, revision, acceptance, and release states.", status: "Complete" },
   { phase: "Release Library", count: 2, label: "Reviewed publications now have reader-facing records, provenance, revision details, and downloadable copies.", status: "Complete" },
   { phase: "Platform", count: 5, label: "Evidence Graph, D1 records, role authority, governance administration, and five expanded methods operate as one milestone.", status: "Complete" },
-  { phase: "Next", count: 1, label: "External-user validation and production hardening now replace internal feature expansion as the priority.", status: "Active" }
+  { phase: "Validation", count: 8, label: "External testers now have eight weighted missions, evidence capture, friction reporting, readiness scoring, and exportable reports.", status: "Complete" },
+  { phase: "Next", count: 1, label: "Two independent people must now complete the validation protocol before launch readiness can be claimed.", status: "Active" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
