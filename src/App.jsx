@@ -44,6 +44,7 @@ function Header() {
     ["#/journal", "Journal"],
     ["#/labs", "Labs"],
     ["#/studio", "Studio"],
+    ["#/releases", "Releases"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -306,7 +307,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -1141,6 +1142,125 @@ function StudioPage() {
   </main>;
 }
 
+const foundationReleases = [
+  {
+    id: "REL-001", publicationId: "PUB-001", sourceId: "D-001", format: "Field Guide", audience: "Builders and stewards",
+    title: "The First Domino: A Field Guide", revision: 1, released: "2026-07-24", reviewer: "Meridian Foundation Review",
+    evidence: "Source claim, conditions of validity, audience fit, actionability, and provenance were checked against MKS v0.5.",
+    summary: "A practical guide for choosing the smallest deliberate action capable of initiating a useful reaction without pretending to control the final pattern.",
+    text: `THE FIRST DOMINO: A FIELD GUIDE
+
+THE POSITION
+Distinguish deliberate initiation from the emergent pattern that follows.
+
+THE GOVERNING CLAIM
+The first domino is not part of the pattern. It is the plan that initiates the realization of the pattern.
+
+WHY IT MATTERS
+The first action cannot contain the future. Its value is the useful reaction it makes possible.
+
+USE IT WHEN
+Apply this guide where an intentional act is meant to initiate a reaction whose later form will be shaped by reality.
+
+FIRST USEFUL ACTION
+Choose one live situation. Record the present position, the smallest sufficient catalyst, and the evidence that would show a second action occurred.
+
+EVIDENCE OF TRANSFER
+A second person can explain the claim, use it in context, and identify where it should not be applied without the creator present.`
+  },
+  {
+    id: "REL-002", publicationId: "PUB-002", sourceId: "F-001", format: "Executive Brief", audience: "Leaders entering unfamiliar systems",
+    title: "Orientation: Executive Brief", revision: 1, released: "2026-07-24", reviewer: "Meridian Foundation Review",
+    evidence: "The brief preserves F-001 inputs, validity limits, evidence requirements, and the distinction between observation and assumption.",
+    summary: "A decision brief for leaders who must establish a credible present position before authorizing consequential movement.",
+    text: `ORIENTATION: EXECUTIVE BRIEF
+
+DECISION CLAIM
+Establish where you stand before deciding where to move.
+
+STRATEGIC VALUE
+Orientation prevents desired destinations, inherited maps, and confident assumptions from being mistaken for present reality.
+
+CONDITIONS
+Use when entering a new domain, after material change, or whenever position uncertainty could alter the route.
+
+RECOMMENDED ACTION
+Authorize a bounded orientation brief that separates observations, assumptions, unknowns, and reference signals before committing resources.
+
+RISK AND RESTRAINT
+Do not use orientation as indefinite delay. Once the position is sufficient for the consequence, movement should begin with observation continuing.`
+  }
+];
+
+function readReleases() {
+  if (typeof window === "undefined") return foundationReleases;
+  try {
+    const local = (JSON.parse(window.localStorage.getItem("meridian-studio")) || [])
+      .filter((item) => item.status === "Released")
+      .map((item, index) => ({
+        ...item,
+        id: `REL-${String(100 + index + 1).padStart(3, "0")}`,
+        publicationId: item.id,
+        summary: `${item.format} compiled from ${item.sourceId} for ${item.audience}.`
+      }));
+    return [...foundationReleases, ...local.filter((item) => !foundationReleases.some((seed) => seed.publicationId === item.publicationId))];
+  } catch { return foundationReleases; }
+}
+
+function downloadRelease(item) {
+  const header = `${item.id} · ${item.publicationId} · Revision ${item.revision}\nReleased ${item.released}\nSource ${item.sourceId}\nAudience ${item.audience}\nReviewer ${item.reviewer}\nReview evidence: ${item.evidence}\n\n`;
+  const blob = new Blob([header, item.text], { type: "text/plain;charset=utf-8" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = `${item.id}-${item.title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}.txt`;
+  link.click();
+  URL.revokeObjectURL(link.href);
+}
+
+function ReleaseLibraryPage() {
+  const releases = readReleases();
+  const [query, setQuery] = useState("");
+  const [format, setFormat] = useState("All");
+  const formats = ["All", ...new Set(releases.map((item) => item.format))];
+  const visible = releases.filter((item) => (format === "All" || item.format === format) && `${item.id} ${item.title} ${item.sourceId} ${item.audience} ${item.summary}`.toLowerCase().includes(query.toLowerCase()));
+  return <main className="releases-page">
+    <section className="releases-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN RELEASE LIBRARY</p><h1>Reviewed knowledge.<br /><em>Ready to carry forward.</em></h1></div>
+      <p>Every item here has crossed the publication gate. Its source, audience, reviewer, evidence, revision, and release date remain attached so readers can use the work without losing its lineage.</p>
+    </section>
+    <section className="release-metrics"><article><span>Released publications</span><strong>{releases.length}</strong></article><article><span>Source objects represented</span><strong>{new Set(releases.map((item) => item.sourceId)).size}</strong></article><article><span>Formats available</span><strong>{formats.length - 1}</strong></article></section>
+    <section className="release-tools"><label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search releases by title, source, audience, or purpose…" /></label><div>{formats.map((value) => <button key={value} className={format === value ? "active" : ""} onClick={() => setFormat(value)}>{value}</button>)}</div></section>
+    <section className="release-grid">
+      {visible.map((item) => <a href={`#/releases/${item.id}`} key={item.id}>
+        <div><span>{item.id}</span><b>Released</b></div><p className="kicker">{item.format} · {item.sourceId}</p><h2>{item.title}</h2><p>{item.summary}</p>
+        <footer><span>Revision {item.revision}</span><span>{item.released}</span><b>Read publication ↗</b></footer>
+      </a>)}
+      {!visible.length && <div className="registry-empty"><h3>No release matches.</h3><p>Broaden the search or remove the format filter.</p></div>}
+    </section>
+    <section className="release-principle section"><p className="kicker">Release standard</p><h2>Published does not mean permanent truth. It means the version, evidence, and accountability are permanent enough to examine.</h2></section>
+  </main>;
+}
+
+function ReleasePage({ item }) {
+  if (!item) return <main className="release-page"><section className="empty-result"><h1>Release not found.</h1><a href="#/releases">Return to the Release Library</a></section></main>;
+  return <main className="release-page">
+    <section className="release-masthead">
+      <div className="release-breadcrumb"><a href="#/releases">Release Library</a><span>→</span><span>{item.id}</span></div>
+      <div className="release-mast-grid"><div><p className="eyebrow"><span /> {item.format} · RELEASED {item.released}</p><h1>{item.title}</h1><p>{item.summary}</p></div><aside><span>Release record</span><strong>{item.id}</strong><p>{item.publicationId} · Revision {item.revision}</p><button onClick={() => downloadRelease(item)}>Download release ↗</button></aside></div>
+    </section>
+    <section className="release-provenance">
+      <article><span>Source object</span><strong>{item.sourceId}</strong><a href={`#/mks/${item.sourceId}`}>Inspect source →</a></article>
+      <article><span>Intended audience</span><strong>{item.audience}</strong></article>
+      <article><span>Accountable reviewer</span><strong>{item.reviewer}</strong></article>
+      <article><span>Revision</span><strong>R{item.revision}</strong><p>Released {item.released}</p></article>
+    </section>
+    <section className="release-reader">
+      <article><div className="reader-mark"><span>MERIDIAN ARC SYSTEMS</span><b>{item.id}</b></div><pre>{item.text}</pre><footer><span>Meaningful Automation for Society</span><span>Because Your Time Matters.</span></footer></article>
+      <aside><p className="kicker">Review evidence</p><p>{item.evidence}</p><p className="kicker">Traceability</p><ul><li>Release: {item.id}</li><li>Publication: {item.publicationId}</li><li>Source: {item.sourceId}</li><li>Revision: {item.revision}</li><li>Date: {item.released}</li></ul><button onClick={() => downloadRelease(item)}>Download reader copy</button></aside>
+    </section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -1154,10 +1274,12 @@ export default function App() {
   const glossarySlug = path.match(/^\/glossary\/([^/]+)$/)?.[1];
   const applicationId = path.match(/^\/applications\/([^/]+)$/)?.[1];
   const academyId = path.match(/^\/academy\/([^/]+)$/)?.[1];
+  const releaseId = path.match(/^\/releases\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (glossarySlug) return <><Header /><GlossaryTermPage item={getGlossaryTerm(decodeURIComponent(glossarySlug))} /><Footer /></>;
   if (applicationId) return <><Header /><ApplicationPage item={getApplication(decodeURIComponent(applicationId))} /><Footer /></>;
   if (academyId) return <><Header /><AcademyPathPage item={getAcademyPath(decodeURIComponent(academyId))} /><Footer /></>;
+  if (releaseId) return <><Header /><ReleasePage item={readReleases().find((item) => item.id.toLowerCase() === decodeURIComponent(releaseId).toLowerCase())} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
   if (path === "/glossary") return <><Header /><GlossaryPage /><Footer /></>;
   if (path === "/applications") return <><Header /><ApplicationsPage /><Footer /></>;
@@ -1166,6 +1288,7 @@ export default function App() {
   if (path === "/journal") return <><Header /><JournalPage /><Footer /></>;
   if (path === "/labs") return <><Header /><LabsPage /><Footer /></>;
   if (path === "/studio") return <><Header /><StudioPage /><Footer /></>;
+  if (path === "/releases") return <><Header /><ReleaseLibraryPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
