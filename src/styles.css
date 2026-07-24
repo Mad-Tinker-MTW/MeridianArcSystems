@@ -251,7 +251,49 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
 .footer-links a { color: #859599; text-transform: uppercase; letter-spacing: .13em; font-size: 9px; }
 .footer-bottom { display: flex; justify-content: space-between; color: #53666b; font-size: 8px; text-transform: uppercase; letter-spacing: .13em; }
 
-.library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page { min-height: 100vh; background: var(--deep); padding-top: 84px; }
+.library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page, .labs-page { min-height: 100vh; background: var(--deep); padding-top: 84px; }
+
+.labs-hero { padding: 100px clamp(28px, 7vw, 118px) 86px; display: grid; grid-template-columns: 1.12fr .88fr; align-items: end; gap: 10%; background: radial-gradient(circle at 80% 35%, rgba(65,111,124,.19), transparent 30%), #07131f; border-bottom: 1px solid var(--line); }
+.labs-hero h1 { font-size: clamp(52px, 6.4vw, 92px); }
+.labs-hero h1 em { color: var(--gold-light); }
+.labs-hero > p { color: #91a2a5; max-width: 560px; font-size: 16px; }
+.labs-dashboard { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border-bottom: 1px solid var(--line); }
+.labs-dashboard article { min-height: 190px; background: #091722; padding: 28px clamp(20px, 3vw, 44px); display: flex; flex-direction: column; }
+.labs-dashboard span, .labs-dashboard p { color: #71858a; font-size: 8px; text-transform: uppercase; letter-spacing: .13em; }
+.labs-dashboard strong { margin: auto 0 6px; color: var(--gold-light); font: 500 52px "Playfair Display"; }
+.labs-workspace { display: grid; grid-template-columns: 1.38fr .62fr; gap: 1px; background: var(--line); }
+.experiment-register, .experiment-form { background: #081520; padding: 70px clamp(28px, 5vw, 80px); }
+.experiment-register > header { display: flex; justify-content: space-between; align-items: end; gap: 30px; margin-bottom: 38px; }
+.experiment-register > header > div:last-child { display: flex; flex-wrap: wrap; gap: 6px; justify-content: flex-end; }
+.experiment-register > header button { border: 1px solid var(--line); background: transparent; color: #7e9195; padding: 8px 10px; font-size: 8px; text-transform: uppercase; letter-spacing: .1em; cursor: pointer; }
+.experiment-register > header button b { margin-left: 8px; color: #50666c; }
+.experiment-register > header button.active { color: var(--gold-light); border-color: rgba(200,167,106,.5); background: rgba(200,167,106,.06); }
+.experiment-card { border-top: 1px solid var(--line); padding: 34px 0 70px; }
+.experiment-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; color: #667c81; font-size: 8px; text-transform: uppercase; letter-spacing: .12em; }
+.experiment-meta b { color: #9a855b; }
+.experiment-meta select { margin-left: auto; border: 1px solid var(--line); color: var(--gold-light); background: #0c1d29; padding: 7px 24px 7px 9px; font-size: 8px; text-transform: uppercase; }
+.experiment-card > h2 { font-size: clamp(35px, 4vw, 55px); margin: 24px 0 32px; color: var(--ivory); }
+.experiment-hypothesis { padding: 28px; border: 1px solid rgba(200,167,106,.34); background: rgba(200,167,106,.05); }
+.experiment-hypothesis p:last-child { color: #c4cdca; font: 500 22px "Playfair Display"; }
+.experiment-protocol { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-top: 0; }
+.experiment-protocol section { min-height: 190px; background: #0b1a27; padding: 22px; display: grid; grid-template-columns: 35px 1fr; gap: 14px; }
+.experiment-protocol section > span { color: var(--gold); font: 500 19px "Playfair Display"; }
+.experiment-protocol section p:last-child, .experiment-boundary p:last-child { color: #8fa1a4; }
+.experiment-boundary { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border: 1px solid var(--line); border-top: 0; }
+.experiment-boundary article { background: #091722; padding: 22px; }
+.experiment-result { padding: 28px; background: #e8e4d8; color: #10202a; }
+.experiment-result p:last-child { font: 500 20px "Playfair Display"; }
+.experiment-form { background: #0b1a27; position: sticky; top: 84px; align-self: start; }
+.experiment-form h2 { font-size: 38px; margin-bottom: 28px; }
+.experiment-form > label, .experiment-form > div label { display: flex; flex-direction: column; gap: 8px; margin: 15px 0; }
+.experiment-form > label > span, .experiment-form > div label > span { color: #7f9296; font-size: 8px; text-transform: uppercase; letter-spacing: .13em; }
+.experiment-form input, .experiment-form textarea, .experiment-form select { width: 100%; border: 1px solid var(--line); background: #07131f; color: var(--ivory); padding: 12px; font: 400 13px "Inter"; }
+.experiment-form textarea { resize: vertical; }
+.experiment-form > div { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.experiment-form > button { width: 100%; border: 1px solid var(--gold); background: var(--gold); color: #08131d; padding: 14px; cursor: pointer; font-size: 9px; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; }
+.experiment-form .experiment-reset { margin-top: 8px; border-color: var(--line); background: transparent; color: #7f9296; }
+.labs-standard { text-align: center; background: #e8e4d8; color: #10202a; }
+.labs-standard h2 { max-width: 1100px; margin: 0 auto; }
 
 .journal-hero { padding: 100px clamp(28px, 7vw, 118px) 86px; display: grid; grid-template-columns: 1.12fr .88fr; align-items: end; gap: 10%; background: radial-gradient(circle at 80% 35%, rgba(65,111,124,.19), transparent 30%), #07131f; border-bottom: 1px solid var(--line); }
 .journal-hero h1 { font-size: clamp(52px, 6.4vw, 92px); }
@@ -741,6 +783,9 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .journal-hero, .journal-workspace { grid-template-columns: 1fr; }
   .journal-cycle { grid-template-columns: repeat(5, 1fr); }
   .journal-form { position: static; }
+  .labs-hero, .labs-workspace { grid-template-columns: 1fr; }
+  .labs-dashboard { grid-template-columns: repeat(2, 1fr); }
+  .experiment-form { position: static; }
 }
 
 @media (max-width: 620px) {
@@ -773,7 +818,7 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .begin::after { width: 570px; height: 570px; }
   .footer-links { gap: 17px; }
   .footer-bottom { flex-direction: column; gap: 8px; }
-  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page { padding-top: 72px; }
+  .library-page, .object-page, .framework-library-page, .glossary-page, .glossary-term-page, .applications-page, .application-page, .academy-page, .academy-path-page, .ledger-page, .journal-page, .labs-page { padding-top: 72px; }
   .library-hero { padding: 70px 24px 55px; }
   .library-results { padding: 35px 24px 80px; }
   .result-meta span:last-child { display: none; }
@@ -855,6 +900,16 @@ footer { background: #050d15; padding: 55px clamp(28px, 7vw, 118px) 25px; }
   .journal-chain section { min-height: 170px; }
   .journal-entry-meta select { margin-left: 0; width: 100%; }
   .journal-form > div { grid-template-columns: 1fr; gap: 0; }
+  .labs-hero { padding: 75px 24px 60px; }
+  .labs-dashboard { grid-template-columns: 1fr; }
+  .labs-dashboard article { min-height: 155px; }
+  .experiment-register, .experiment-form { padding: 55px 24px; }
+  .experiment-register > header { align-items: flex-start; flex-direction: column; }
+  .experiment-register > header > div:last-child { justify-content: flex-start; }
+  .experiment-meta select { width: 100%; margin-left: 0; }
+  .experiment-protocol, .experiment-boundary { grid-template-columns: 1fr; }
+  .experiment-protocol section { min-height: 165px; }
+  .experiment-form > div { grid-template-columns: 1fr; gap: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
