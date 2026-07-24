@@ -40,6 +40,7 @@ function Header() {
   const links = [
     ["#/mks", "MKS Library"],
     ["#/academy", "Academy"],
+    ["#/ledger", "GEN Ledger"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -302,7 +303,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -760,6 +761,79 @@ function AcademyProgress({ item }) {
   </section>;
 }
 
+const seedLedger = [
+  { id: "GEN-0001", title: "MKS operational framework library", type: "Knowledge system", gen: 84, hours: 9.5, evidence: "Ten frameworks with inputs, outputs, protocols, checks, worksheets, and completion standards.", reviewer: "Founder review", status: "Accepted", date: "2026-07-23" },
+  { id: "GEN-0002", title: "Meridian Atlas foundation", type: "Application", gen: 125, hours: 11, evidence: "Twenty-five worked applications across eight domains with evidence and risk boundaries.", reviewer: "Founder review", status: "Accepted", date: "2026-07-23" },
+  { id: "GEN-0003", title: "Meridian Academy learning paths", type: "Capability transfer", gen: 70, hours: 7.5, evidence: "Ten guided paths with exercises, mastery evidence, assessment, and source-object links.", reviewer: "Browser and founder review pending", status: "Review", date: "2026-07-23" }
+];
+
+function GenLedgerPage() {
+  const empty = { title: "", type: "Knowledge system", gen: "", hours: "", evidence: "", reviewer: "", status: "Draft" };
+  const [entries, setEntries] = useState(() => {
+    if (typeof window === "undefined") return seedLedger;
+    try { return JSON.parse(window.localStorage.getItem("meridian-gen-ledger")) || seedLedger; } catch { return seedLedger; }
+  });
+  const [form, setForm] = useState(empty);
+  const [filter, setFilter] = useState("All");
+  const accepted = entries.filter((item) => item.status === "Accepted");
+  const completedGen = accepted.reduce((sum, item) => sum + Number(item.gen), 0);
+  const humanHours = accepted.reduce((sum, item) => sum + Number(item.hours), 0);
+  const rot = humanHours ? completedGen / humanHours : 0;
+  const visible = entries.filter((item) => filter === "All" || item.status === filter);
+  const persist = (next) => {
+    setEntries(next);
+    if (typeof window !== "undefined") window.localStorage.setItem("meridian-gen-ledger", JSON.stringify(next));
+  };
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const submit = (event) => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.evidence.trim() || Number(form.gen) <= 0 || Number(form.hours) <= 0) return;
+    const number = Math.max(0, ...entries.map((item) => Number(item.id.replace(/\D/g, "")))) + 1;
+    persist([{ ...form, id: `GEN-${String(number).padStart(4, "0")}`, gen: Number(form.gen), hours: Number(form.hours), date: new Date().toISOString().slice(0, 10) }, ...entries]);
+    setForm(empty);
+  };
+  const changeStatus = (id, status) => persist(entries.map((item) => item.id === id ? { ...item, status } : item));
+  const reset = () => persist(seedLedger);
+  return <main className="ledger-page">
+    <section className="ledger-hero">
+      <div><p className="eyebrow"><span /> GEN MEASUREMENT · OPERATING LEDGER</p><h1>Count capability.<br /><em>Preserve the evidence.</em></h1></div>
+      <p>GEN enters the completed total only after the work is usable, evidence exists, and review accepts the claim. Activity alone does not count.</p>
+    </section>
+    <section className="ledger-metrics">
+      <article><span>Accepted capability</span><strong>{completedGen.toLocaleString()}<small> gen</small></strong><p>Only accepted entries</p></article>
+      <article><span>Human investment</span><strong>{humanHours.toFixed(1)}<small> hours</small></strong><p>Accepted entries only</p></article>
+      <article><span>Return on Time</span><strong>{rot.toFixed(2)}<small> gen / hr</small></strong><p>Qualified, not absolute</p></article>
+      <article><span>Evidence chain</span><strong>{accepted.length}<small> accepted</small></strong><p>{entries.length - accepted.length} awaiting acceptance</p></article>
+    </section>
+    <section className="ledger-workspace">
+      <div className="ledger-register">
+        <header><div><p className="kicker">Capability register</p><h2>Completed intellectual work</h2></div><div className="ledger-filters">{["All", "Draft", "Review", "Accepted"].map((value) => <button className={filter === value ? "active" : ""} onClick={() => setFilter(value)} key={value}>{value}<b>{value === "All" ? entries.length : entries.filter((item) => item.status === value).length}</b></button>)}</div></header>
+        <div className="ledger-table">
+          {visible.map((item) => <article key={item.id}>
+            <div className="ledger-entry-head"><span>{item.id} · {item.date}</span><select aria-label={`Status for ${item.title}`} value={item.status} onChange={(event) => changeStatus(item.id, event.target.value)}><option>Draft</option><option>Review</option><option>Accepted</option></select></div>
+            <h3>{item.title}</h3><p>{item.evidence}</p>
+            <div className="ledger-entry-foot"><span>{item.type}</span><b>{Number(item.gen).toLocaleString()} gen</b><b>{Number(item.hours).toFixed(1)} hr</b><strong>{(Number(item.gen) / Number(item.hours)).toFixed(2)} RoT</strong></div>
+            <small>Review: {item.reviewer || "Not assigned"}</small>
+          </article>)}
+        </div>
+      </div>
+      <form className="ledger-form" onSubmit={submit}>
+        <p className="kicker">Record a claim</p><h2>What capability now exists?</h2>
+        <label><span>Completed work</span><input required value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Name the reusable result" /></label>
+        <label><span>Work type</span><select value={form.type} onChange={(event) => update("type", event.target.value)}><option>Knowledge system</option><option>Application</option><option>Capability transfer</option><option>Software</option><option>Research</option><option>Decision support</option></select></label>
+        <div><label><span>GEN claimed</span><input required min="0.01" step="0.01" type="number" value={form.gen} onChange={(event) => update("gen", event.target.value)} placeholder="0.00" /></label><label><span>Human hours</span><input required min="0.01" step="0.01" type="number" value={form.hours} onChange={(event) => update("hours", event.target.value)} placeholder="0.00" /></label></div>
+        <label><span>Reviewable evidence</span><textarea required rows="5" value={form.evidence} onChange={(event) => update("evidence", event.target.value)} placeholder="Describe the artifact, test, transfer, or observable capability…" /></label>
+        <label><span>Reviewer or validation</span><input value={form.reviewer} onChange={(event) => update("reviewer", event.target.value)} placeholder="Who can examine this claim?" /></label>
+        <label><span>Entry state</span><select value={form.status} onChange={(event) => update("status", event.target.value)}><option>Draft</option><option>Review</option><option>Accepted</option></select></label>
+        <button type="submit">Add ledger entry ↗</button>
+        <button type="button" className="ledger-reset" onClick={reset}>Restore foundation entries</button>
+        <p className="local-note">This foundation ledger is stored in this browser. Acceptance is a review state, not a measure of human worth.</p>
+      </form>
+    </section>
+    <section className="ledger-standard section"><p className="kicker">GEN acceptance gate</p><div><span>01</span><p><b>Completed</b>The result has reached a usable state.</p><span>02</span><p><b>Reviewable</b>Evidence can be inspected by another person.</p><span>03</span><p><b>Reusable</b>Capability, understanding, or value persists beyond the session.</p><span>04</span><p><b>Accepted</b>The claim survives an accountable review.</p></div></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -781,6 +855,7 @@ export default function App() {
   if (path === "/glossary") return <><Header /><GlossaryPage /><Footer /></>;
   if (path === "/applications") return <><Header /><ApplicationsPage /><Footer /></>;
   if (path === "/academy") return <><Header /><AcademyPage /><Footer /></>;
+  if (path === "/ledger") return <><Header /><GenLedgerPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
