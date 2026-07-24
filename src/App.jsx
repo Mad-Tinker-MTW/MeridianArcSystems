@@ -1191,6 +1191,35 @@ Authorize a bounded orientation brief that separates observations, assumptions, 
 
 RISK AND RESTRAINT
 Do not use orientation as indefinite delay. Once the position is sufficient for the consequence, movement should begin with observation continuing.`
+  },
+  {
+    id: "REL-003", publicationId: "PUB-003", sourceId: "MKS-v0.5", format: "Validation Report", audience: "Founders, stewards, reviewers, and early adopters",
+    title: "Foundation External Validation Report", revision: 1, released: "2026-07-24", reviewer: "Two non-builder human testers and one AI domain reviewer",
+    evidence: "Two non-builder humans used the live site on their phones. The full evidence package attributes human-live and AI source-reviewed missions separately.",
+    summary: "The first externally examined Meridian Foundation baseline: all ten hardening gates passed, eight missions documented, 94/100 usability, one friction finding, and no blocked tasks.",
+    text: `FOUNDATION EXTERNAL VALIDATION REPORT
+
+DECISION
+The Meridian Arc Foundation passes all ten production-hardening gates.
+
+EVIDENCE
+Two people who did not build the system used the live site on their own phones. Their live evidence covered release provenance and mobile navigation. An AI domain reviewer examined the remaining mission evidence from the production source.
+
+RESULT
+Hardening gates: 10/10 passed.
+Validation missions with evidence: 8/8.
+Usability score: 94/100.
+Friction findings: 1.
+Blocked missions: 0.
+
+INTEGRITY BOUNDARY
+Not every mission is human-live evidence. AI-reviewed and human-tested evidence remain separately attributed. VAL-001 stays at friction because the reviewer was not a naive first-time user.
+
+REMEDIATION
+Clarify what counts as one knowledge object, replace "Authorize movement" with plain language, strengthen light-background contrast, and guard mobile content from the fixed header.
+
+NEXT DECISION
+Freeze the validated Foundation scope and define acceptance criteria for a release candidate.`
   }
 ];
 
@@ -1361,7 +1390,7 @@ function PlatformPage() {
 }
 
 const validationMissions = [
-  { id: "VAL-001", title: "Find a useful idea", route: "#/mks", instruction: "Without guidance, find one knowledge object that applies to a problem you recognize.", evidence: "Name the object and explain why you chose it.", weight: 12 },
+  { id: "VAL-001", title: "Find a useful idea", route: "#/mks", instruction: "Without guidance, choose any one doctrine, law, framework, method, instrument, pattern, or measurement that applies to a problem you recognize.", evidence: "Name the single object, including its ID, and explain why you chose it.", weight: 12 },
   { id: "VAL-002", title: "Understand the First Domino", route: "#/mks/D-001", instruction: "Read D-001 and explain the difference between the initiating plan and the emerging pattern.", evidence: "Restate the distinction in your own words.", weight: 14 },
   { id: "VAL-003", title: "Use an application", route: "#/applications", instruction: "Choose a worked application and identify its diagnosis, catalyst, and expected reaction.", evidence: "Record whether the sequence made the situation easier to act on.", weight: 12 },
   { id: "VAL-004", title: "Complete a learning path", route: "#/academy/LP-001", instruction: "Follow Begin at 0,0 far enough to produce a present-position statement.", evidence: "Save the statement and identify any instruction that was unclear.", weight: 16 },
