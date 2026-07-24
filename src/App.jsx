@@ -41,6 +41,7 @@ function Header() {
     ["#/mks", "MKS Library"],
     ["#/academy", "Academy"],
     ["#/ledger", "GEN Ledger"],
+    ["#/journal", "Journal"],
     ["#/glossary", "Glossary"],
     ["#/applications", "Applications"],
     ["#/framework-library", "Frameworks"],
@@ -303,7 +304,7 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
@@ -834,6 +835,73 @@ function GenLedgerPage() {
   </main>;
 }
 
+const seedJournal = [
+  { id: "J-0001", date: "2026-07-23", title: "The website became the first true domino", domain: "Company", phase: "Compound", status: "Compounded", observation: "Meridian had a growing doctrine but no public place where the ideas could be examined or used.", action: "Build one coherent website that gives the MKS, frameworks, patterns, instruments, and roadmap permanent homes.", reaction: "The conversation shifted from describing Meridian to operating it. Each new asset gained a visible dependency and destination.", learning: "A home changes knowledge from discussion into infrastructure.", inherited: "Every future Meridian object must be published into the system, linked, and usable without the founder present.", related: "D-001 · F-006 · M-001" },
+  { id: "J-0002", date: "2026-07-23", title: "Applications exposed the distance between principle and practice", domain: "Knowledge", phase: "Reflect", status: "Reflected", observation: "Operational objects could still appear abstract without recognizable situations and consequences.", action: "Create twenty-five worked applications across family, education, business, health, community, AI, leadership, and personal systems.", reaction: "Doctrine began behaving differently across domains. Risks, boundaries, and evidence became harder to ignore.", learning: "Universality must be tested through varied consequences, not repeated language.", inherited: "New doctrine requires at least one worked application and one counterexample before it can mature." , related: "A-001–A-025 · L-011" },
+  { id: "J-0003", date: "2026-07-24", title: "GEN needed an acceptance gate", domain: "Measurement", phase: "Observe", status: "Open", observation: "A quantity of intellectual output can become self-congratulatory if work is counted before evidence and review.", action: "Build a GEN Ledger where only Accepted entries enter completed GEN and RoT totals.", reaction: "The metric now distinguishes a claim, a review state, and accepted capability.", learning: "Measurement integrity comes from the gate, not the arithmetic.", inherited: "Test the acceptance workflow with independent reviewers and define quality qualifications for GEN estimates.", related: "G-001 · G-002 · L-012" }
+];
+
+function JournalPage() {
+  const blank = { title: "", domain: "Knowledge", phase: "Observe", status: "Open", observation: "", action: "", reaction: "", learning: "", inherited: "", related: "" };
+  const [entries, setEntries] = useState(() => {
+    if (typeof window === "undefined") return seedJournal;
+    try { return JSON.parse(window.localStorage.getItem("meridian-journal")) || seedJournal; } catch { return seedJournal; }
+  });
+  const [form, setForm] = useState(blank);
+  const [phase, setPhase] = useState("All");
+  const [query, setQuery] = useState("");
+  const phases = ["All", "Observe", "Orient", "Discover", "Design", "Catalyze", "React", "Reflect", "Learn", "Compound", "Steward"];
+  const visible = entries.filter((entry) => (phase === "All" || entry.phase === phase) && `${entry.title} ${entry.domain} ${entry.observation} ${entry.learning} ${entry.inherited}`.toLowerCase().includes(query.toLowerCase()));
+  const persist = (next) => {
+    setEntries(next);
+    if (typeof window !== "undefined") window.localStorage.setItem("meridian-journal", JSON.stringify(next));
+  };
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const submit = (event) => {
+    event.preventDefault();
+    if (!form.title.trim() || !form.observation.trim() || !form.inherited.trim()) return;
+    const number = Math.max(0, ...entries.map((entry) => Number(entry.id.replace(/\D/g, "")))) + 1;
+    persist([{ ...form, id: `J-${String(number).padStart(4, "0")}`, date: new Date().toISOString().slice(0, 10) }, ...entries]);
+    setForm(blank);
+  };
+  const setEntryStatus = (id, status) => persist(entries.map((entry) => entry.id === id ? { ...entry, status } : entry));
+  return <main className="journal-page">
+    <section className="journal-hero">
+      <div><p className="eyebrow"><span /> MERIDIAN JOURNAL · SYSTEM MEMORY</p><h1>Record what<br /><em>reality taught.</em></h1></div>
+      <p>A journal entry is not a diary of activity. It preserves the evidence chain from observation through reaction so the next cycle inherits more than a conclusion.</p>
+    </section>
+    <section className="journal-cycle">{phases.slice(1).map((value, index) => <button key={value} className={phase === value ? "active" : ""} onClick={() => setPhase(phase === value ? "All" : value)}><span>{String(index + 1).padStart(2, "0")}</span>{value}<b>{entries.filter((entry) => entry.phase === value).length}</b></button>)}</section>
+    <section className="journal-workspace">
+      <div className="journal-stream">
+        <header><label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search observation, learning, or inheritance…" aria-label="Search journal" /></label><p>{visible.length} entries · {phase === "All" ? "Entire cycle" : phase}</p></header>
+        {visible.map((entry) => <article key={entry.id}>
+          <div className="journal-entry-meta"><span>{entry.id} · {entry.date}</span><b>{entry.domain}</b><em>{entry.phase}</em><select aria-label={`Status for ${entry.title}`} value={entry.status} onChange={(event) => setEntryStatus(entry.id, event.target.value)}><option>Open</option><option>Reflected</option><option>Compounded</option></select></div>
+          <h2>{entry.title}</h2>
+          <div className="journal-chain">
+            <section><span>01</span><div><p className="kicker">Observation</p><p>{entry.observation}</p></div></section>
+            <section><span>02</span><div><p className="kicker">Action</p><p>{entry.action || "No action recorded yet."}</p></div></section>
+            <section><span>03</span><div><p className="kicker">Reaction</p><p>{entry.reaction || "Reaction has not yet been observed."}</p></div></section>
+            <section><span>04</span><div><p className="kicker">Learning</p><p>{entry.learning || "Learning remains open."}</p></div></section>
+          </div>
+          <div className="journal-inheritance"><span>What the next cycle inherits</span><p>{entry.inherited}</p><small>{entry.related || "No related objects recorded"}</small></div>
+        </article>)}
+        {!visible.length && <div className="empty-result"><h2>No journal entry found.</h2><p>Clear the phase filter or use a broader search.</p></div>}
+      </div>
+      <form className="journal-form" onSubmit={submit}>
+        <p className="kicker">Create a field note</p><h2>Preserve the route, not just the answer.</h2>
+        <label><span>Entry title</span><input required value={form.title} onChange={(event) => update("title", event.target.value)} placeholder="Name the change or discovery" /></label>
+        <div><label><span>Domain</span><select value={form.domain} onChange={(event) => update("domain", event.target.value)}><option>Knowledge</option><option>Company</option><option>Product</option><option>Measurement</option><option>Teaching</option><option>Technology</option><option>Human system</option></select></label><label><span>Cycle phase</span><select value={form.phase} onChange={(event) => update("phase", event.target.value)}>{phases.slice(1).map((value) => <option key={value}>{value}</option>)}</select></label></div>
+        {[["observation", "Observation", "What did reality make visible?"], ["action", "Action", "What deliberate action followed?"], ["reaction", "Reaction", "What happened after the action?"], ["learning", "Learning", "What changed in understanding?"], ["inherited", "Next-cycle inheritance", "What must the next cycle receive?"]].map(([key, label, prompt]) => <label key={key}><span>{label}</span><textarea required={key === "observation" || key === "inherited"} rows="3" value={form[key]} onChange={(event) => update(key, event.target.value)} placeholder={prompt} /></label>)}
+        <label><span>Related objects</span><input value={form.related} onChange={(event) => update("related", event.target.value)} placeholder="D-001 · F-007 · A-001" /></label>
+        <button type="submit">Add journal entry ↗</button>
+        <button type="button" className="journal-reset" onClick={() => persist(seedJournal)}>Restore foundation entries</button>
+        <p className="local-note">Entries remain in this browser. A future persistent release will support shared stewardship and revision history.</p>
+      </form>
+    </section>
+    <section className="journal-standard section"><p className="kicker">Journal rule</p><h2>If the next cycle inherits only the decision, the system loses the intelligence that produced it.</h2></section>
+  </main>;
+}
+
 export default function App() {
   const [route, setRoute] = useState("#/");
   useEffect(() => {
@@ -856,6 +924,7 @@ export default function App() {
   if (path === "/applications") return <><Header /><ApplicationsPage /><Footer /></>;
   if (path === "/academy") return <><Header /><AcademyPage /><Footer /></>;
   if (path === "/ledger") return <><Header /><GenLedgerPage /><Footer /></>;
+  if (path === "/journal") return <><Header /><JournalPage /><Footer /></>;
   if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
