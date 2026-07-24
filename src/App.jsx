@@ -45,7 +45,7 @@ function Header() {
     ["#/labs", "Labs"],
     ["#/studio", "Studio"],
     ["#/releases", "Releases"],
-    ["#/release-candidate", "RC1"],
+    ["#/release-candidate", "v0.6"],
     ["#/platform", "Platform"],
     ["#/validate", "Validate"],
     ["#/glossary", "Glossary"],
@@ -90,7 +90,7 @@ function Hero() {
           <a className="text-link" href="#specification">Explore the specification <span>→</span></a>
         </div>
         <div className="proof-line">
-          <div><strong>v0.6 RC1</strong><span>Validated Foundation</span></div>
+          <div><strong>v0.6</strong><span>Validated Foundation release</span></div>
           <div><strong>12</strong><span>Meridian laws</span></div>
           <div><strong>GEN</strong><span>Capability, measured</span></div>
         </div>
@@ -164,7 +164,7 @@ function Specification() {
           <h3>{item.title}</h3>
           <p>{item.desc}</p>
           <ul>{item.examples.map((example) => <li key={example}><span>↗</span>{example}</li>)}</ul>
-          <a className="quiet-button" href={`#/mks?class=${encodeURIComponent(item.classification)}`}>Open collection · v0.6 RC1</a>
+          <a className="quiet-button" href={`#/mks?class=${encodeURIComponent(item.classification)}`}>Open collection · v0.6</a>
         </div>
       </div>
     </section>
@@ -255,7 +255,7 @@ function Laws() {
     <section className="laws section">
       <div className="section-label">06 / MERIDIAN LAWS</div>
       <div className="laws-head">
-        <div><p className="kicker">Foundation v0.6 RC1</p><h2>Twelve statements<br />to build against.</h2></div>
+        <div><p className="kicker">Foundation v0.6</p><h2>Twelve statements<br />to build against.</h2></div>
         <p>Not commandments. Testable design principles, each with conditions of validity and an obligation to survive contact with reality.</p>
       </div>
       <div className="law-list">
@@ -310,11 +310,11 @@ function Footer() {
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
-        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/release-candidate">RC1</a><a href="#/platform">Platform</a><a href="#/validate">Validate</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
+        <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/release-candidate">v0.6</a><a href="#/platform">Platform</a><a href="#/validate">Validate</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
         <span>Meridian Arc Systems, LLC</span>
-        <span>MKS Foundation · v0.6 RC1</span>
+        <span>MKS Foundation · v0.6</span>
         <span>Because Your Time Matters.</span>
       </div>
     </footer>
@@ -342,7 +342,7 @@ function Library() {
     <main className="library-page">
       <section className="library-hero">
         <div>
-          <p className="eyebrow"><span /> MKS · FOUNDATION v0.6 RC1</p>
+          <p className="eyebrow"><span /> MKS · FOUNDATION v0.6</p>
           <h1>Knowledge with<br /><em>a permanent home.</em></h1>
         </div>
         <p>Search the doctrine, laws, frameworks, methods, instruments, patterns, and measurements that form Meridian Arc’s source of truth.</p>
@@ -612,7 +612,7 @@ function GlossaryPage() {
     <section className="glossary-tools">
       <label className="search-box"><span>⌕</span><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search term, definition, or distinction…" aria-label="Search glossary" /></label>
       <div className="glossary-filters">{categories.map((value) => <button key={value} className={category === value ? "active" : ""} onClick={() => setCategory(value)}>{value}<b>{value === "All" ? glossaryTerms.length : glossaryTerms.filter((item) => item.category === value).length}</b></button>)}</div>
-      <p className="result-meta"><span>{results.length} terms shown</span><span>MKS v0.6 RC1 · Foundation language</span></p>
+      <p className="result-meta"><span>{results.length} terms shown</span><span>MKS v0.6 · Foundation language</span></p>
     </section>
     <section className="glossary-grid">
       {results.map((item, index) => <a href={`#/glossary/${item.slug}`} key={item.slug}>
@@ -1221,6 +1221,35 @@ Clarify what counts as one knowledge object, replace "Authorize movement" with p
 
 NEXT DECISION
 Freeze the validated Foundation scope and define acceptance criteria for a release candidate.`
+  },
+  {
+    id: "REL-004", publicationId: "PUB-004", sourceId: "MKS-v0.6", format: "Release Notes", audience: "Practitioners, stewards, reviewers, and early adopters",
+    title: "MKS v0.6 Foundation Release", revision: 1, released: "2026-07-24", reviewer: "Founder acceptance after RC1 audit",
+    evidence: "RC1 passed ten acceptance gates, fifteen automated release-consistency checks, ten hardening checks, both production builds, and reader-facing browser verification.",
+    summary: "The first accepted Meridian Knowledge Specification Foundation release: bounded, externally examined, secured, recoverable, versioned, and ready for use.",
+    text: `MKS v0.6 FOUNDATION RELEASE
+
+STATUS
+Accepted and released on 2026-07-24.
+
+SCOPE
+125 Foundation assets, including 48 specification objects, 27 glossary terms, 25 applications, 10 Academy paths, five platform capabilities, and governed reader releases.
+
+ACCEPTANCE
+RC1 passed all ten release-acceptance gates.
+The release audit passed fifteen consistency checks.
+The hardening audit passed ten implementation checks.
+Static and server-capable production builds completed.
+The release control page was verified in the browser without horizontal overflow.
+
+VALIDATION
+Two non-builder humans contributed live-site evidence.
+Eight missions carry evidence.
+Usability score: 94/100.
+Blocked missions: zero.
+
+BOUNDARY
+This release is a trustworthy baseline, not the end of Meridian Arc. Broader testing, commercial offers, certification governance, and additional field evidence are post-release work.`
   }
 ];
 
@@ -1292,14 +1321,14 @@ const rcScope = [
   ["Applications", "25", "Worked scenarios across eight domains"],
   ["Academy", "10", "Guided learning paths ending in observable mastery"],
   ["Platform capabilities", "5", "Evidence, durable records, authority, governance, and expanded methods"],
-  ["Governed releases", "3", "Field guide, executive brief, and validation report"],
+  ["Governed releases", "4", "Field guide, executive brief, validation report, and accepted v0.6 release"],
   ["Hardening gates", "10/10", "Build, access, security, recovery, and external validation"],
   ["Validation missions", "8/8", "94/100 usability; one friction finding; zero blocked tasks"]
 ];
 
 function ReleaseCandidatePage() {
   const manifest = {
-    release: "MKS v0.6-rc.1", status: "Release Candidate", frozen: "2026-07-24", assets: 125,
+    release: "MKS v0.6", status: "Released", accepted: "2026-07-24", candidate: "MKS v0.6-rc.1", frozen: "2026-07-24", assets: 125,
     acceptance: rcAcceptance.map(([id, name, evidence]) => ({ id, name, status: "Pass", evidence })),
     scope: rcScope.map(([name, count, boundary]) => ({ name, count, boundary })),
     knownLimitations: [
@@ -1312,31 +1341,31 @@ function ReleaseCandidatePage() {
   };
   const downloadManifest = () => {
     const blob = new Blob([JSON.stringify(manifest, null, 2)], { type: "application/json;charset=utf-8" });
-    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "MKS-v0.6-rc.1-manifest.json"; link.click(); URL.revokeObjectURL(link.href);
+    const link = document.createElement("a"); link.href = URL.createObjectURL(blob); link.download = "MKS-v0.6-release-manifest.json"; link.click(); URL.revokeObjectURL(link.href);
   };
   return <main className="rc-page">
     <section className="rc-hero">
-      <div><p className="eyebrow"><span /> MKS v0.6 · RELEASE CANDIDATE 1</p><h1>The Foundation is<br /><em>frozen and reviewable.</em></h1></div>
-      <div className="rc-seal"><span>RC</span><strong>01</strong><p>125 assets<br />10/10 gates</p></div>
-      <p>RC1 is the first bounded Meridian release that can be accepted or rejected against visible evidence. Its job is not to contain the whole future. Its job is to establish a trustworthy baseline others can examine, use, and continue.</p>
+      <div><p className="eyebrow"><span /> MKS v0.6 · FOUNDATION RELEASE</p><h1>The Foundation is<br /><em>accepted and released.</em></h1></div>
+      <div className="rc-seal"><span>MKS</span><strong>06</strong><p>125 assets<br />10/10 gates</p></div>
+      <p>MKS v0.6 is the first bounded Meridian release accepted against visible evidence. Its job is not to contain the whole future. Its job is to establish a trustworthy baseline others can examine, use, and continue.</p>
     </section>
     <section className="rc-decision">
-      <article><span>Release state</span><strong>Candidate</strong><p>Scope changes now require a new revision.</p></article>
+      <article><span>Release state</span><strong>Released</strong><p>Accepted after RC1 passed every criterion.</p></article>
       <article><span>Acceptance gates</span><strong>10/10</strong><p>Every gate carries an evidence statement.</p></article>
       <article><span>External usability</span><strong>94/100</strong><p>One retained friction finding; zero blockers.</p></article>
-      <article><span>Frozen assets</span><strong>125</strong><p>New concepts move beyond the RC1 boundary.</p></article>
+      <article><span>Frozen assets</span><strong>125</strong><p>New concepts move into a later version.</p></article>
     </section>
     <section className="rc-acceptance section">
       <header><div><p className="kicker">Acceptance contract</p><h2>Ten reasons this candidate may ship.</h2></div><p>A pass is a claim backed by a named artifact, control, build, or external observation—not a declaration that Meridian can never improve.</p></header>
       <div>{rcAcceptance.map(([id, name, evidence]) => <article key={id}><span>{id}</span><b>Pass</b><h3>{name}</h3><p>{evidence}</p></article>)}</div>
     </section>
     <section className="rc-scope section">
-      <header><div><p className="kicker">Frozen scope</p><h2>What RC1 contains.</h2></div><button onClick={downloadManifest}>Download RC1 manifest</button></header>
+      <header><div><p className="kicker">Frozen scope</p><h2>What v0.6 contains.</h2></div><button onClick={downloadManifest}>Download v0.6 manifest</button></header>
       <div>{rcScope.map(([name, count, boundary]) => <article key={name}><strong>{count}</strong><div><h3>{name}</h3><p>{boundary}</p></div></article>)}</div>
     </section>
     <section className="rc-boundary section">
-      <div><p className="kicker">Known limits</p><h2>Complete enough to release does not mean finished forever.</h2></div>
-      <div><h3>Held outside RC1</h3><ul>{manifest.knownLimitations.map((item) => <li key={item}>{item}</li>)}</ul><h3>Post-release work</h3><ul>{manifest.postRelease.map((item) => <li key={item}>{item}</li>)}</ul></div>
+      <div><p className="kicker">Known limits</p><h2>Released does not mean finished forever.</h2></div>
+      <div><h3>Held outside v0.6</h3><ul>{manifest.knownLimitations.map((item) => <li key={item}>{item}</li>)}</ul><h3>Post-release work</h3><ul>{manifest.postRelease.map((item) => <li key={item}>{item}</li>)}</ul></div>
     </section>
     <section className="rc-actions section">
       <div><p className="kicker">Review the candidate</p><h2>Inspect the source, evidence, and release lineage.</h2></div>
@@ -1353,7 +1382,7 @@ function ReleasePage({ item }) {
       <div className="release-mast-grid"><div><p className="eyebrow"><span /> {item.format} · RELEASED {item.released}</p><h1>{item.title}</h1><p>{item.summary}</p></div><aside><span>Release record</span><strong>{item.id}</strong><p>{item.publicationId} · Revision {item.revision}</p><button onClick={() => downloadRelease(item)}>Download release ↗</button></aside></div>
     </section>
     <section className="release-provenance">
-      <article><span>Source object</span><strong>{item.sourceId}</strong><a href={`#/mks/${item.sourceId}`}>Inspect source →</a></article>
+      <article><span>Source object</span><strong>{item.sourceId}</strong>{getObject(item.sourceId) ? <a href={`#/mks/${item.sourceId}`}>Inspect source →</a> : <a href="#/release-candidate">Inspect release baseline →</a>}</article>
       <article><span>Intended audience</span><strong>{item.audience}</strong></article>
       <article><span>Accountable reviewer</span><strong>{item.reviewer}</strong></article>
       <article><span>Revision</span><strong>R{item.revision}</strong><p>Released {item.released}</p></article>
