@@ -1378,7 +1378,7 @@ const hardeningChecks = [
   ["Reduced motion", "Pass", "Animations and transitions yield to the reduced-motion preference."],
   ["Server write authority", "Pass", "Mutation authority is checked at the API boundary, not trusted from the client."],
   ["Durable data migration", "Pass", "D1 schema and indexed migration ship with the deployed artifact."],
-  ["External task completion", "Pending", "Requires at least two people who did not build the system."],
+  ["External task completion", "Pass", "Two non-builder human testers used the live site on their own phones and supplied evidence for live release inspection and mobile navigation."],
   ["Accessibility baseline", "Pass", "Semantic controls, labels, focus paths, responsive overflow, reduced motion, and landmark structure are checked in the hardening audit."],
   ["Threat review", "Pass", "Write paths now enforce identity, same-origin JSON, collection and ID allow-lists, payload ceilings, and private-evidence access boundaries."],
   ["Backup restoration", "Pass", "Founder-only export plus validated dry-run and explicit restore paths ship with the platform recovery procedure."]
