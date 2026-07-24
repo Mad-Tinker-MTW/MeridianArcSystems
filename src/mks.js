@@ -670,7 +670,7 @@ export function getAcademyPath(id) {
 }
 
 export const roadmap = [
-  { phase: "Built", count: 109, label: "Knowledge objects, glossary terms, applications, learning paths, measurement, memory, experimentation, and translation now have permanent homes.", status: "Complete" },
+  { phase: "Built", count: 110, label: "Knowledge objects, glossary terms, applications, learning paths, measurement, memory, experimentation, translation, and governed publication now have permanent homes.", status: "Complete" },
   { phase: "Operational", count: 43, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
   { phase: "Glossary", count: 27, label: "Core terms have definitions, distinctions, examples, and cross-links.", status: "Complete" },
   { phase: "Applications", count: 25, label: "Worked scenarios test Meridian across eight real-life domains.", status: "Complete" },
@@ -679,7 +679,8 @@ export const roadmap = [
   { phase: "Journal", count: 1, label: "Observations, actions, reactions, learning, and next-cycle inheritance now form a reusable evidence chain.", status: "Complete" },
   { phase: "Labs", count: 1, label: "Hypotheses now become bounded experiments with safeguards, evidence signals, outcomes, and accountable review.", status: "Complete" },
   { phase: "Studio", count: 1, label: "Specification objects now compile into traceable field guides, lessons, and executive briefs for named audiences.", status: "Complete" },
-  { phase: "Next", count: 1, label: "A governed publication registry will move reviewed Studio drafts from local work into durable Meridian releases.", status: "Active" }
+  { phase: "Publication", count: 1, label: "Studio drafts now pass through accountable review, evidence, revision, acceptance, and release states.", status: "Complete" },
+  { phase: "Next", count: 1, label: "The Meridian Release Library will give approved publications stable public records and direct reader access.", status: "Active" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
