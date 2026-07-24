@@ -670,13 +670,14 @@ export function getAcademyPath(id) {
 }
 
 export const roadmap = [
-  { phase: "Built", count: 106, label: "Knowledge objects, glossary terms, applications, learning paths, and the GEN ledger have permanent homes.", status: "Complete" },
+  { phase: "Built", count: 107, label: "Knowledge objects, glossary terms, applications, learning paths, the GEN ledger, and the Journal have permanent homes.", status: "Complete" },
   { phase: "Operational", count: 43, label: "Every current object includes a usable evidence standard or operating protocol.", status: "Complete" },
   { phase: "Glossary", count: 27, label: "Core terms have definitions, distinctions, examples, and cross-links.", status: "Complete" },
   { phase: "Applications", count: 25, label: "Worked scenarios test Meridian across eight real-life domains.", status: "Complete" },
   { phase: "Academy", count: 10, label: "Guided paths teach independent use and end in observable mastery.", status: "Complete" },
   { phase: "GEN Ledger", count: 1, label: "Completed capability, evidence, review state, human time, and Return on Time are now recorded.", status: "Complete" },
-  { phase: "Next", count: 1, label: "The Meridian Journal will preserve observations, reactions, decisions, and learning across cycles.", status: "Active" }
+  { phase: "Journal", count: 1, label: "Observations, actions, reactions, learning, and next-cycle inheritance now form a reusable evidence chain.", status: "Complete" },
+  { phase: "Next", count: 1, label: "Meridian Labs will turn hypotheses into bounded, observable experiments.", status: "Active" }
 ];
 
 export const classifications = ["All", "Doctrine", "Law", "Framework", "Method", "Instrument", "Pattern", "Measurement"];
