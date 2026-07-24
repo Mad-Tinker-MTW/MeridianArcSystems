@@ -16,14 +16,7 @@ const laws = [
   ["12", "Progress is better measured by capability created than hours consumed."]
 ];
 
-const frameworks = [
-  { id: "F-001", name: "Orientation", text: "Establish where you stand before deciding where to move.", status: "Foundation" },
-  { id: "F-002", name: "Decision Lens", text: "Evaluate choices against purpose, consequence, and time.", status: "Foundation" },
-  { id: "F-003", name: "Thought Pathways", text: "Make the routes between questions, ideas, and action visible.", status: "Foundation" },
-  { id: "F-004", name: "Junction Theory", text: "Recognize moments when a choice changes the shape of the journey.", status: "Developing" },
-  { id: "F-005", name: "Catalyst Model", text: "Find the minimum necessary action that initiates useful motion.", status: "Foundation" },
-  { id: "F-006", name: "Capability Multipliers", text: "Turn one investment of effort into reusable increases in capacity.", status: "Developing" }
-];
+const frameworks = mksObjects.filter((item) => item.classification === "Framework");
 
 const cycle = ["Observe", "Orient", "Discover", "Design", "Catalyze", "React", "Reflect", "Learn", "Compound", "Steward"];
 
@@ -46,15 +39,11 @@ function Header() {
   const [open, setOpen] = useState(false);
   const links = [
     ["#/mks", "MKS Library"],
+    ["#/framework-library", "Frameworks"],
     ["#/laws", "Laws"],
     ["#/patterns", "Patterns"],
     ["#/instruments", "Instruments"],
-    ["#/roadmap", "Roadmap"],
-    ["#specification", "Specification"],
-    ["#frameworks", "Frameworks"],
-    ["#metrics", "Metrics"],
-    ["#labs", "Labs"],
-    ["#academy", "Academy"]
+    ["#/roadmap", "Roadmap"]
   ];
 
   return (
@@ -204,9 +193,9 @@ function Frameworks() {
         {frameworks.map((framework, index) => (
           <article key={framework.id} className="linked-card" onClick={() => { window.location.hash = `/mks/${framework.id}`; }}>
             <div className="card-top"><span>{framework.id}</span><span>{framework.status}</span></div>
-            <div className={`glyph glyph-${index + 1}`}><i /><i /><i /></div>
-            <h3>{framework.name}</h3>
-            <p>{framework.text}</p>
+            <div className={`glyph glyph-${(index % 6) + 1}`}><i /><i /><i /></div>
+            <h3>{framework.title}</h3>
+            <p>{framework.statement}</p>
             <a className="card-link" href={`#/mks/${framework.id}`}>View specification <b>↗</b></a>
           </article>
         ))}
@@ -564,8 +553,39 @@ function InstrumentsPage() {
   </main>;
 }
 
+function FrameworkLibraryPage() {
+  const bands = [
+    ["SEE", ["F-001", "F-003", "F-008"], "Establish position, expose reasoning, and discover what matters."],
+    ["DECIDE", ["F-002", "F-004"], "Choose with purpose and recognize the junctions that change the route."],
+    ["INITIATE", ["F-005", "F-006"], "Start useful motion and turn effort into reusable capability."],
+    ["LEARN", ["F-007", "F-009"], "Let reality update the route without losing long-range direction."],
+    ["SUSTAIN", ["F-010"], "Examine whether the system can transfer, recover, learn, and continue."]
+  ];
+  return <main className="framework-library-page">
+    <section className="framework-library-hero">
+      <p className="eyebrow"><span /> TEN OPERATIONAL FRAMEWORKS</p>
+      <h1>Ways of seeing<br /><em>that lead to action.</em></h1>
+      <p>Each framework now includes defined inputs, outputs, repeatable steps, decision checks, GEN evidence, and a live canvas. Pick the situation you are in and begin there.</p>
+    </section>
+    <section className="framework-bands">
+      {bands.map(([band, ids, copy], bandIndex) => <article key={band}>
+        <header><span>0{bandIndex + 1}</span><div><p className="kicker">{band}</p><p>{copy}</p></div></header>
+        <div>
+          {ids.map((id) => {
+            const item = getObject(id);
+            return <a href={`#/mks/${id}`} key={id}>
+              <span>{item.id}</span><h2>{item.title}</h2><p>{item.statement}</p><b>{item.worksheet?.length || 0} canvas fields ↗</b>
+            </a>;
+          })}
+        </div>
+      </article>)}
+    </section>
+    <section className="framework-rule section"><p className="kicker">Framework rule</p><h2>A framework is a disciplined question.<br />Reality still provides the answer.</h2></section>
+  </main>;
+}
+
 export default function App() {
-  const [route, setRoute] = useState(typeof window === "undefined" ? "#/" : (window.location.hash || "#/"));
+  const [route, setRoute] = useState("#/");
   useEffect(() => {
     const update = () => { setRoute(window.location.hash || "#/"); window.scrollTo(0, 0); };
     update();
@@ -576,6 +596,7 @@ export default function App() {
   const objectId = path.match(/^\/mks\/([^/]+)$/)?.[1];
   if (objectId) return <><Header /><ObjectPage item={getObject(decodeURIComponent(objectId))} /><Footer /></>;
   if (path === "/mks") return <><Header /><Library /><Footer /></>;
+  if (path === "/framework-library") return <><Header /><FrameworkLibraryPage /><Footer /></>;
   if (path === "/laws") return <><Header /><LawsPage /><Footer /></>;
   if (path === "/patterns") return <><Header /><PatternsPage /><Footer /></>;
   if (path === "/instruments") return <><Header /><InstrumentsPage /><Footer /></>;
