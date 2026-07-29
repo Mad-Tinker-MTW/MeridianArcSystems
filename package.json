@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vinext build && node scripts/package-sites.mjs",
     "build:pages": "vite build --config vite.pages.config.js && node scripts/package-pages.mjs",
+    "build:cf": "vite build --config vite.cf.config.js && node scripts/package-cf.mjs",
     "audit:hardening": "node scripts/hardening-audit.mjs",
     "audit:release": "node scripts/release-audit.mjs",
     "start": "vinext start",
