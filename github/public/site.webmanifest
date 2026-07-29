@@ -1,0 +1,13 @@
+{
+  "name": "Meridian Arc Systems",
+  "short_name": "Meridian Arc",
+  "icons": [
+    { "src": "/MeridianArcSystems/web-app-manifest-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/MeridianArcSystems/web-app-manifest-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "theme_color": "#07111c",
+  "background_color": "#07111c",
+  "display": "standalone",
+  "start_url": "/MeridianArcSystems/",
+  "scope": "/MeridianArcSystems/"
+}
