@@ -1,6 +1,6 @@
 # Meridian Arc
 
-The public website for **Meridian Arc Systems, LLC**.
+The public website for **Meridian Arc Systems**, a division of Atlantis Prime Holdings LLC.
 
 > Meaningful Automation for Society  
 > Because Your Time Matters.

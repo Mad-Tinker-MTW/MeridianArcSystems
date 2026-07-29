@@ -313,7 +313,7 @@ function Footer() {
         <a href="#/mks">MKS Library</a><a href="#/academy">Academy</a><a href="#/ledger">GEN Ledger</a><a href="#/journal">Journal</a><a href="#/labs">Labs</a><a href="#/studio">Studio</a><a href="#/releases">Releases</a><a href="#/release-candidate">v0.6</a><a href="#/platform">Platform</a><a href="#/validate">Validate</a><a href="#/glossary">Glossary</a><a href="#/applications">Applications</a><a href="#/framework-library">Frameworks</a><a href="#/laws">Laws</a><a href="#/patterns">Patterns</a><a href="#/instruments">Instruments</a><a href="#/roadmap">Roadmap</a>
       </div>
       <div className="footer-bottom">
-        <span>Meridian Arc Systems, LLC</span>
+        <span>Meridian Arc Systems · A division of Atlantis Prime Holdings LLC</span>
         <span>MKS Foundation · v0.6</span>
         <span>Because Your Time Matters.</span>
       </div>
