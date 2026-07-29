@@ -60,7 +60,7 @@ function Header() {
   return (
     <header className="site-header">
       <a href="#top" className="brand" aria-label="Meridian Arc home">
-        <span className="mini-mark"><i /><i /><i /></span>
+        <img src={import.meta.env.BASE_URL + "meridian-logo.png"} alt="Meridian Arc" style={{ height: "32px", width: "auto", display: "block" }} />
         <span><b>MERIDIAN</b> ARC</span>
       </a>
       <button className="menu-button" onClick={() => setOpen(!open)} aria-expanded={open} aria-label="Toggle navigation">
@@ -306,7 +306,7 @@ function Footer() {
   return (
     <footer>
       <div className="footer-brand">
-        <span className="mini-mark"><i /><i /><i /></span>
+        <img src={import.meta.env.BASE_URL + "meridian-logo.png"} alt="Meridian Arc" style={{ height: "32px", width: "auto", display: "block" }} />
         <div><b>MERIDIAN ARC</b><span>Meaningful Automation for Society</span></div>
       </div>
       <div className="footer-links">
